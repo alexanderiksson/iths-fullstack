@@ -16,8 +16,10 @@ const client = new Client({
 
 client.connect();
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
+app.get("/", async (req, res) => {
+    const { rows } = await client.query("SELECT * FROM users");
+
+    res.send(rows);
 });
 
 app.listen(port, () => {
