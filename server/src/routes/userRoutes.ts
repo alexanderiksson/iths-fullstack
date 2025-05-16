@@ -94,7 +94,7 @@ router.post("/login", async (req, res) => {
         );
 
         if (user.rows.length === 0) {
-            res.status(400).send("Incorrect username");
+            res.status(401).send("Incorrect username");
             return;
         }
 
@@ -102,7 +102,7 @@ router.post("/login", async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
         if (!passwordMatch) {
-            res.status(400).send("Incorrect password");
+            res.status(401).send("Incorrect password");
             return;
         }
 
@@ -110,7 +110,7 @@ router.post("/login", async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: false,
         });
 
         res.sendStatus(200);
