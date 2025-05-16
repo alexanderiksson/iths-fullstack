@@ -1,8 +1,42 @@
+import { Request, Response, NextFunction } from "express";
 import express from "express";
 import bcrypt from "bcrypt";
 import client from "../postgres";
+import jwt from "jsonwebtoken";
+
+declare global {
+    namespace Express {
+        interface Request {
+            user?: any;
+        }
+    }
+}
+
+const SECRET = "hemlig_nyckel";
 
 const router = express.Router();
+
+function authenticate(req: Request, res: Response, next: NextFunction) {
+    const token = req.cookies.token;
+    if (!token) {
+        res.status(200).json({ loggedIn: false });
+        return;
+    }
+
+    try {
+        const user = jwt.verify(token, SECRET);
+        (req as any).user = user;
+        next();
+        return;
+    } catch {
+        res.status(403).json({ loggedIn: false });
+        return;
+    }
+}
+
+router.get("/check-auth", authenticate, (req, res) => {
+    res.json({ loggedIn: true, user: req.user });
+});
 
 router.post("/signup", async (req, res) => {
     const { username, password } = req.body;
@@ -71,6 +105,13 @@ router.post("/login", async (req, res) => {
             res.status(400).send("Incorrect password");
             return;
         }
+
+        const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+        });
 
         res.sendStatus(200);
         return;

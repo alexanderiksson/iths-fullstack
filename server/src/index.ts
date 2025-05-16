@@ -2,12 +2,14 @@ import express from "express";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
 import client from "./postgres";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = 3000;
 
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use("/", userRoutes);
 
 app.get("/", async (req, res) => {
