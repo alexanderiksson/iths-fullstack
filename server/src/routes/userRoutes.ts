@@ -1,8 +1,11 @@
-import { Request, Response, NextFunction } from "express";
 import express from "express";
 import bcrypt from "bcrypt";
 import client from "../postgres";
 import jwt from "jsonwebtoken";
+import auth from "../middlewares/auth";
+
+const router = express.Router();
+const jwtSecret = process.env.JWT_SECRET as string | undefined;
 
 declare global {
     namespace Express {
@@ -12,29 +15,7 @@ declare global {
     }
 }
 
-const SECRET = "hemlig_nyckel";
-
-const router = express.Router();
-
-function authenticate(req: Request, res: Response, next: NextFunction) {
-    const token = req.cookies.token;
-    if (!token) {
-        res.status(200).json({ loggedIn: false });
-        return;
-    }
-
-    try {
-        const user = jwt.verify(token, SECRET);
-        (req as any).user = user;
-        next();
-        return;
-    } catch {
-        res.status(403).json({ loggedIn: false });
-        return;
-    }
-}
-
-router.get("/check-auth", authenticate, (req, res) => {
+router.get("/check-auth", auth, (req, res) => {
     res.json({ loggedIn: true, user: req.user });
 });
 
@@ -106,7 +87,13 @@ router.post("/login", async (req, res) => {
             return;
         }
 
-        const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
+        if (!jwtSecret) {
+            console.error("JWT_SECRET is not defined");
+            res.sendStatus(500);
+            return;
+        }
+
+        const token = jwt.sign({ username }, jwtSecret, { expiresIn: "1h" });
 
         res.cookie("token", token, {
             httpOnly: true,
