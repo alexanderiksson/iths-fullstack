@@ -24,7 +24,7 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
         next();
         return;
     } catch {
-        res.status(403).json({ loggedIn: false });
+        res.status(200).json({ loggedIn: false });
         return;
     }
 }

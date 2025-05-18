@@ -22,19 +22,19 @@ router.get("/check-auth", auth, (req, res) => {
 router.post("/signup", async (req, res) => {
     const { username, password } = req.body;
 
+    // Kolla om användarnamn och lösenord är ifyllt
     if (!username || !password) {
-        res.status(400).send("Username & password is required");
+        res.status(400).send("Användarnamn & lösenord är obligatoriskt");
         return;
     }
 
     try {
-        const user = await client.query(
-            "SELECT * FROM users WHERE username = $1",
-            [username]
-        );
+        // Leta efter användarnamn i databas
+        const user = await client.query("SELECT * FROM users WHERE username = $1", [username]);
 
+        // Kolla om användarnamnet är upptaget
         if (user.rows.length > 0) {
-            res.status(409).send("Username is already taken");
+            res.status(409).send("Användarnamnet är upptaget");
             return;
         }
     } catch (err) {
@@ -44,12 +44,29 @@ router.post("/signup", async (req, res) => {
     }
 
     try {
+        // Skapa hash av lösenordet
         const hash = await bcrypt.hash(password, 10);
 
-        await client.query(
-            "INSERT INTO users (username, password) VALUES ($1, $2)",
-            [username, hash]
-        );
+        // Spara användaren i databasen
+        await client.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
+            username,
+            hash,
+        ]);
+
+        if (!jwtSecret) {
+            console.error("JWT_SECRET is not defined");
+            res.sendStatus(500);
+            return;
+        }
+
+        // Generera en ny token åt användaren
+        const token = jwt.sign({ username }, jwtSecret, { expiresIn: "1h" });
+
+        // Skicka cookie till klienten med token
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+        });
 
         res.sendStatus(201);
         return;
@@ -63,17 +80,17 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
+    // Kolla om användarnamn och lösenord är ifyllt
     if (!username || !password) {
         res.sendStatus(400);
         return;
     }
 
     try {
-        const user = await client.query(
-            "SELECT * FROM users WHERE username = $1",
-            [username]
-        );
+        // Försök hämta användaren från databasen
+        const user = await client.query("SELECT * FROM users WHERE username = $1", [username]);
 
+        // Kolla om användaren finns
         if (user.rows.length === 0) {
             res.status(401).send("Incorrect username");
             return;
@@ -82,6 +99,7 @@ router.post("/login", async (req, res) => {
         const hashedPassword = user.rows[0].password;
         const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
+        // Kolla om lösendords hashen matchar
         if (!passwordMatch) {
             res.status(401).send("Incorrect password");
             return;
@@ -93,8 +111,10 @@ router.post("/login", async (req, res) => {
             return;
         }
 
+        // Generera en ny token åt användaren
         const token = jwt.sign({ username }, jwtSecret, { expiresIn: "1h" });
 
+        // Skicka cookie till klienten med token
         res.cookie("token", token, {
             httpOnly: true,
             secure: false,

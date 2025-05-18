@@ -1,9 +1,6 @@
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-
-interface User {
-    username: string;
-}
+import type { User } from "../types/User";
 
 export default function Home() {
     const { user, loading, error } = useAuth() as {
@@ -19,7 +16,8 @@ export default function Home() {
 
     return (
         <div className="content">
-            <h1 className="text-2xl font-bold">Välkommen, {user?.username}</h1>
+            <h1 className="text-4xl font-bold">Välkommen, {user?.username}</h1>
+            <p>Ditt flöde är tomt</p>
         </div>
     );
 }

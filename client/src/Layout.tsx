@@ -1,9 +1,13 @@
 import { Outlet } from "react-router-dom";
+import Navbar from "./components/Navbar";
 
 export default function Layout() {
     return (
-        <main>
-            <Outlet />
-        </main>
+        <>
+            <Navbar />
+            <main className="pt-8 flex-1">
+                <Outlet />
+            </main>
+        </>
     );
 }

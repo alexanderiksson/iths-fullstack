@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS posts (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL CHECK (char_length(password) < 500),
+    user_id INTEGER REFERENCES users(id),
     created DATE DEFAULT CURRENT_TIMESTAMP
 )
