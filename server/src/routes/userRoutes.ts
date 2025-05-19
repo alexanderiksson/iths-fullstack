@@ -129,4 +129,46 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.get("/followers/:user", async (req, res) => {
+    const user = req.params.user;
+
+    try {
+        const followers = await client.query("SELECT * FROM users_follows WHERE follows = $1", [
+            user,
+        ]);
+
+        if (followers.rows.length === 0) {
+            res.status(200).json({ message: "User has no followers" });
+            return;
+        }
+
+        res.status(200).json(followers.rows);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+});
+
+router.get("/follows/:user", async (req, res) => {
+    const user = req.params.user;
+
+    try {
+        const follows = await client.query("SELECT * FROM users_follows WHERE user_id = $1", [
+            user,
+        ]);
+
+        if (follows.rows.length === 0) {
+            res.status(200).json({ message: "User has no follows" });
+            return;
+        }
+
+        res.status(200).json(follows.rows);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+});
+
 export default router;

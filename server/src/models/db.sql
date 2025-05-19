@@ -11,3 +11,9 @@ CREATE TABLE IF NOT EXISTS posts (
     user_id INTEGER REFERENCES users(id),
     created DATE DEFAULT CURRENT_TIMESTAMP
 )
+
+CREATE TABLE IF NOT EXISTS users_follows (
+    user_id INTEGER REFERENCES users(id),
+    follows INTEGER REFERENCES users(id),
+    created DATE DEFAULT CURRENT_TIMESTAMP
+)

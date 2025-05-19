@@ -1,19 +1,28 @@
+// hooks/useFetch.ts
 import { useEffect, useState } from "react";
-import axios from "axios";
 
-export default function useFetch<T>(url: string) {
+function useFetch<T>(url: string | null) {
     const [data, setData] = useState<T | null>(null);
-    const [error, setError] = useState<Error | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<unknown>(null);
 
     useEffect(() => {
+        if (!url) return;
+
         setLoading(true);
-        axios
-            .get<T>(url)
-            .then((response) => setData(response.data))
+        setError(null);
+
+        fetch(url)
+            .then((res) => {
+                if (!res.ok) throw new Error("Något gick fel vid hämtning.");
+                return res.json();
+            })
+            .then((data) => setData(data))
             .catch((err) => setError(err))
             .finally(() => setLoading(false));
     }, [url]);
 
-    return { data, error, loading };
+    return { data, loading, error };
 }
+
+export default useFetch;
