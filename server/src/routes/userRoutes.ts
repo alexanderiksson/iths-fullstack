@@ -112,7 +112,7 @@ router.post("/login", async (req, res) => {
         }
 
         // Generera en ny token åt användaren
-        const token = jwt.sign({ username }, jwtSecret, { expiresIn: "1h" });
+        const token = jwt.sign({ username, id: user.rows[0].id }, jwtSecret, { expiresIn: "1h" });
 
         // Skicka cookie till klienten med token
         res.cookie("token", token, {
