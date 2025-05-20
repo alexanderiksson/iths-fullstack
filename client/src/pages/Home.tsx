@@ -13,11 +13,7 @@ export default function Home() {
         loading: boolean;
         error: unknown;
     };
-    const {
-        data: feed,
-        loading: feedLoading,
-        error: feedError,
-    } = useFetch<Post[]>(import.meta.env.VITE_SERVER_URL + "/feed");
+    const { data: feed, loading: feedLoading, error: feedError } = useFetch<Post[]>("/api/feed");
 
     const navigate = useNavigate();
 

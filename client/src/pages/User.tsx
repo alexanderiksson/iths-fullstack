@@ -24,7 +24,7 @@ export default function User() {
         data: profileData,
         loading: profileLoading,
         error: profileError,
-    } = useFetch<User>(authUser ? import.meta.env.VITE_SERVER_URL + `/user/${id}` : null);
+    } = useFetch<User>(authUser ? `/api/user/${id}` : null);
 
     if (!authUser && !authLoading) {
         navigate("/login");

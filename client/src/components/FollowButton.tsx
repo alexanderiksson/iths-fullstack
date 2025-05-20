@@ -22,18 +22,14 @@ export default function FollowButton({ targetUserId, initialIsFollowing }: Follo
         setLoading(true);
         try {
             if (isFollowing) {
-                await axios.delete(import.meta.env.VITE_SERVER_URL + `/follow/${targetUserId}`, {
+                await axios.delete(`/api/follow/${targetUserId}`, {
                     withCredentials: true,
                 });
                 setIsFollowing(false);
             } else {
-                await axios.post(
-                    import.meta.env.VITE_SERVER_URL + `/follow/${targetUserId}`,
-                    null,
-                    {
-                        withCredentials: true,
-                    }
-                );
+                await axios.post(`/api/follow/${targetUserId}`, null, {
+                    withCredentials: true,
+                });
                 setIsFollowing(true);
             }
         } catch (err) {

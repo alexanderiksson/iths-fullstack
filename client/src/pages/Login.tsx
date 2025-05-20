@@ -17,14 +17,14 @@ export default function Login() {
 
         try {
             await axios.post(
-                import.meta.env.VITE_SERVER_URL + "/login",
+                "/api/login",
                 { username, password },
                 {
                     withCredentials: true,
                 }
             );
 
-            const res = await axios.get(import.meta.env.VITE_SERVER_URL + "/me", {
+            const res = await axios.get("/api/me", {
                 withCredentials: true,
             });
 

@@ -9,7 +9,7 @@ export default function useAuth() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await axios.get(import.meta.env.VITE_SERVER_URL + "/check-auth", {
+                const response = await axios.get("/api/check-auth", {
                     withCredentials: true,
                 });
 

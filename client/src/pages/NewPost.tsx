@@ -10,7 +10,7 @@ export default function NewPost() {
 
         try {
             const res = await axios.post(
-                import.meta.env.VITE_SERVER_URL + "/new-post",
+                "/api/new-post",
                 { text },
                 {
                     withCredentials: true,
