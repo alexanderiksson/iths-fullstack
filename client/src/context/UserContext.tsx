@@ -28,7 +28,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         data,
         loading: userLoading,
         error: userError,
-    } = useFetch<User>(userId ? `http://localhost:3000/user/${userId}` : null);
+    } = useFetch<User>(userId ? import.meta.env.VITE_SERVER_URL + `/user/${userId}` : null);
 
     const [user, setUser] = useState<User | null>(null);
 

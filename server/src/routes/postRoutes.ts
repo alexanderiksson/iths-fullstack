@@ -1,5 +1,5 @@
 import express from "express";
-import client from "../postgres";
+import pool from "../db";
 import auth from "../middlewares/auth";
 
 const router = express.Router();
@@ -14,7 +14,7 @@ router.post("/new-post", auth, async (req, res) => {
     }
 
     try {
-        await client.query("INSERT INTO posts (text, user_id) VALUES ($1, $2)", [text, user.id]);
+        await pool.query("INSERT INTO posts (text, user_id) VALUES ($1, $2)", [text, user.id]);
         res.sendStatus(201);
         return;
     } catch (err) {

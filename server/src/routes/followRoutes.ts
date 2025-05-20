@@ -1,5 +1,5 @@
 import express from "express";
-import client from "../postgres";
+import pool from "../db";
 import auth from "../middlewares/auth";
 
 const router = express.Router();
@@ -14,7 +14,7 @@ router.post("/follow/:id", auth, async (req, res) => {
     }
 
     try {
-        await client.query(
+        await pool.query(
             "INSERT INTO users_follows (user_id, follows) VALUES ($1, $2) ON CONFLICT DO NOTHING",
             [followerId, followingId]
         );
@@ -32,7 +32,7 @@ router.delete("/follow/:id", auth, async (req, res) => {
     const followingId = req.params.id;
 
     try {
-        await client.query("DELETE FROM users_follows WHERE user_id = $1 AND follows= $2", [
+        await pool.query("DELETE FROM users_follows WHERE user_id = $1 AND follows= $2", [
             followerId,
             followingId,
         ]);

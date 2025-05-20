@@ -17,7 +17,7 @@ export default function Home() {
         data: feed,
         loading: feedLoading,
         error: feedError,
-    } = useFetch<Post[]>("http://localhost:3000/feed");
+    } = useFetch<Post[]>(import.meta.env.VITE_SERVER_URL + "/feed");
 
     const navigate = useNavigate();
 

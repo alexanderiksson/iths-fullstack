@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import client from "../postgres";
+import pool from "../db";
 import jwt from "jsonwebtoken";
 import auth from "../middlewares/auth";
 
@@ -30,7 +30,7 @@ router.post("/signup", async (req, res) => {
 
     try {
         // Leta efter användarnamn i databas
-        const user = await client.query("SELECT * FROM users WHERE username = $1", [username]);
+        const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
 
         // Kolla om användarnamnet är upptaget
         if (user.rows.length > 0) {
@@ -48,7 +48,7 @@ router.post("/signup", async (req, res) => {
         const hash = await bcrypt.hash(password, 10);
 
         // Spara användaren i databasen
-        await client.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
+        await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
             username,
             hash,
         ]);
@@ -88,7 +88,7 @@ router.post("/login", async (req, res) => {
 
     try {
         // Försök hämta användaren från databasen
-        const user = await client.query("SELECT * FROM users WHERE username = $1", [username]);
+        const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
 
         // Kolla om användaren finns
         if (user.rows.length === 0) {
@@ -133,17 +133,15 @@ router.get("/user/:user", auth, async (req, res) => {
     const user = req.params.user;
 
     try {
-        const userInfo = await client.query("SELECT id, username FROM users WHERE id = $1", [user]);
+        const userInfo = await pool.query("SELECT id, username FROM users WHERE id = $1", [user]);
 
-        const followers = await client.query("SELECT * FROM users_follows WHERE follows = $1", [
+        const followers = await pool.query("SELECT * FROM users_follows WHERE follows = $1", [
             user,
         ]);
 
-        const follows = await client.query("SELECT * FROM users_follows WHERE user_id = $1", [
-            user,
-        ]);
+        const follows = await pool.query("SELECT * FROM users_follows WHERE user_id = $1", [user]);
 
-        const posts = await client.query("SELECT * FROM posts WHERE user_id = $1", [user]);
+        const posts = await pool.query("SELECT * FROM posts WHERE user_id = $1", [user]);
 
         const data = {
             id: userInfo.rows[0].id,

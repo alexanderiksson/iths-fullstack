@@ -17,14 +17,14 @@ export default function Login() {
 
         try {
             await axios.post(
-                "http://localhost:3000/login",
+                import.meta.env.VITE_SERVER_URL + "/login",
                 { username, password },
                 {
                     withCredentials: true,
                 }
             );
 
-            const res = await axios.get("http://localhost:3000/me", {
+            const res = await axios.get(import.meta.env.VITE_SERVER_URL + "/me", {
                 withCredentials: true,
             });
 

@@ -9,12 +9,9 @@ export default function useAuth() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await axios.get(
-                    "http://localhost:3000/check-auth",
-                    {
-                        withCredentials: true,
-                    }
-                );
+                const response = await axios.get(import.meta.env.VITE_SERVER_URL + "/check-auth", {
+                    withCredentials: true,
+                });
 
                 if (response.data.loggedIn) {
                     setUser(response.data.user);

@@ -23,7 +23,7 @@ export default function Profile() {
         data: userData,
         loading: userLoading,
         error: userError,
-    } = useFetch<User>(user ? `http://localhost:3000/user/${user.id}` : null);
+    } = useFetch<User>(user ? import.meta.env.VITE_SERVER_URL + `/user/${user.id}` : null);
 
     if (!user && !authLoading) {
         navigate("/login");

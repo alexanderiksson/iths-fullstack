@@ -1,15 +1,13 @@
-import { Client } from "pg";
+import { Pool } from "pg";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const client = new Client({
+const pool = new Pool({
     connectionString: process.env.PGURI,
     ssl: {
         rejectUnauthorized: false,
     },
 });
 
-client.connect();
-
-export default client;
+export default pool;

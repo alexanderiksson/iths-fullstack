@@ -22,14 +22,18 @@ export default function FollowButton({ targetUserId, initialIsFollowing }: Follo
         setLoading(true);
         try {
             if (isFollowing) {
-                await axios.delete(`http://localhost:3000/follow/${targetUserId}`, {
+                await axios.delete(import.meta.env.VITE_SERVER_URL + `/follow/${targetUserId}`, {
                     withCredentials: true,
                 });
                 setIsFollowing(false);
             } else {
-                await axios.post(`http://localhost:3000/follow/${targetUserId}`, null, {
-                    withCredentials: true,
-                });
+                await axios.post(
+                    import.meta.env.VITE_SERVER_URL + `/follow/${targetUserId}`,
+                    null,
+                    {
+                        withCredentials: true,
+                    }
+                );
                 setIsFollowing(true);
             }
         } catch (err) {
@@ -47,7 +51,7 @@ export default function FollowButton({ targetUserId, initialIsFollowing }: Follo
                 isFollowing ? "bg-transparent" : "bg-primary"
             } border-2 border-primary py-2 px-6 rounded-lg text-white cursor-pointer`}
         >
-            {loading ? "Laddar..." : isFollowing ? "Följer" : "Följ"}
+            {loading ? "Laddar..." : isFollowing ? "Sluta följ" : "Följ"}
         </button>
     );
 }

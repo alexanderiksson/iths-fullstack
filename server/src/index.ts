@@ -3,7 +3,7 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
 import followRoutes from "./routes/followRoutes";
-import client from "./postgres";
+import pool from "./db";
 import cookieParser from "cookie-parser";
 import auth from "./middlewares/auth";
 
@@ -21,7 +21,7 @@ app.use("/", postRoutes);
 app.use("/", followRoutes);
 
 app.get("/", async (req, res) => {
-    const { rows } = await client.query("SELECT * FROM users_follows");
+    const { rows } = await pool.query("SELECT * FROM users_follows");
 
     res.send(rows);
 });
@@ -31,7 +31,7 @@ app.get("/feed", auth, async (req, res) => {
         const userId = req.user.id; // Antar att din auth-middleware lägger in user i req
 
         // Hämta alla user_ids som den inloggade följer
-        const followsResult = await client.query(
+        const followsResult = await pool.query(
             "SELECT follows FROM users_follows WHERE user_id = $1",
             [userId]
         );
@@ -45,7 +45,7 @@ app.get("/feed", auth, async (req, res) => {
         }
 
         // Hämta alla inlägg från användare som följs, sorterade nyast först
-        const postsResult = await client.query(
+        const postsResult = await pool.query(
             `SELECT posts.*, users.username
              FROM posts
              JOIN users ON posts.user_id = users.id

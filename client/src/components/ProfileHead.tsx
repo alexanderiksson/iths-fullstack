@@ -24,7 +24,7 @@ export default function ProfileHead({
     const handleLogOut = async () => {
         try {
             await axios.post(
-                "http://localhost:3000/logout",
+                import.meta.env.VITE_SERVER_URL + "/logout",
                 {},
                 {
                     withCredentials: true,
