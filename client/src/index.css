@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+:root {
+    --primary: #1076d5;
+}
+
+@theme {
+    --color-primary: var(--primary);
+}
+
 body,
 #root {
     display: flex;
@@ -13,4 +21,8 @@ body,
     max-width: 1000px;
     width: 90%;
     margin: 0 auto;
+}
+
+.active {
+    color: var(--primary);
 }

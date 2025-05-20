@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { GoHomeFill, GoSearch } from "react-icons/go";
-import { FaUserCircle } from "react-icons/fa";
+import { GoHome, GoPlus } from "react-icons/go";
+import { GrSearch } from "react-icons/gr";
+import { LuUser } from "react-icons/lu";
 
 export default function Navbar() {
     return (
@@ -8,18 +9,24 @@ export default function Navbar() {
             <div className="content">
                 <ul className="flex justify-end gap-20 items-center">
                     <li>
-                        <NavLink to="/" className="flex items-center gap-1">
-                            <GoHomeFill size={24} /> Hem
+                        <NavLink to="/" className="flex items-center gap-2">
+                            <GoHome size={20} /> Hem
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/" className="flex items-center gap-1">
-                            <GoSearch size={24} /> Sök
+                        <NavLink to="/new-post" className="flex items-center gap-2">
+                            <GoPlus size={23} /> Nytt
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/profile" className="flex items-center gap-1">
-                            <FaUserCircle size={24} /> Profil
+                        <NavLink to="/search" className="flex items-center gap-2 ">
+                            <GrSearch size={18} /> Sök
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/profile" className="flex items-center gap-2">
+                            <LuUser size={21} />
+                            Profil
                         </NavLink>
                     </li>
                 </ul>
