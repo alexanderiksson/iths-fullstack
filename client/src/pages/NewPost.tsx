@@ -31,16 +31,20 @@ export default function NewPost() {
 
     return (
         <div className="content">
-            <h1 className="text-3xl font-bold mb-4">Nytt inlägg</h1>
+            <h1 className="text-2xl mb-8">Nytt inlägg</h1>
             <textarea
                 rows={8}
-                className="border border-black/20 rounded-lg w-xl max-w-full p-2"
+                className="border border-white/10 rounded-lg w-xl max-w-full p-2 mb-4 bg-neutral-800/70 placeholder:text-neutral-500"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
+                placeholder="Skriv ett inlägg"
+                required
             ></textarea>
-            {msg && <p>{msg}</p>}
+
+            {msg && <p className="pb-4">{msg}</p>}
+
             <button
-                className="flex bg-primary py-3 px-6 rounded-lg text-white cursor-pointer"
+                className="flex bg-primary py-2 px-6 rounded-lg text-white cursor-pointer"
                 onClick={handlePost}
             >
                 Publicera

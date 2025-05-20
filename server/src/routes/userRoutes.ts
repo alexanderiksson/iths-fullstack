@@ -129,11 +129,11 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.get("/user/:user", async (req, res) => {
+router.get("/user/:user", auth, async (req, res) => {
     const user = req.params.user;
 
     try {
-        const userInfo = await client.query("SELECT (username) FROM users WHERE id = $1", [user]);
+        const userInfo = await client.query("SELECT id, username FROM users WHERE id = $1", [user]);
 
         const followers = await client.query("SELECT * FROM users_follows WHERE follows = $1", [
             user,
@@ -146,6 +146,7 @@ router.get("/user/:user", async (req, res) => {
         const posts = await client.query("SELECT * FROM posts WHERE user_id = $1", [user]);
 
         const data = {
+            id: userInfo.rows[0].id,
             username: userInfo.rows[0].username,
             followers: followers.rows.map((follower) => follower.user_id),
             follows: follows.rows.map((follow) => follow.follows),
@@ -154,6 +155,20 @@ router.get("/user/:user", async (req, res) => {
 
         res.status(200).json(data);
     } catch (err) {}
+});
+
+router.get("/me", auth, (req, res) => {
+    const { id, username } = req.user;
+    res.json({ id, username });
+});
+
+router.post("/logout", (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: false,
+    });
+
+    res.sendStatus(200);
 });
 
 export default router;

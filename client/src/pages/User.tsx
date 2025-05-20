@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useFetch from "../hooks/useFetch";
 import type { User } from "../types/User";
@@ -6,11 +6,12 @@ import Loader from "../components/Loader";
 import PostCard from "../components/PostCard";
 import ProfileHead from "../components/ProfileHead";
 
-export default function Profile() {
+export default function User() {
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const {
-        user,
+        user: authUser,
         loading: authLoading,
         error: authError,
     } = useAuth() as {
@@ -20,38 +21,44 @@ export default function Profile() {
     };
 
     const {
-        data: userData,
-        loading: userLoading,
-        error: userError,
-    } = useFetch<User>(user ? `http://localhost:3000/user/${user.id}` : null);
+        data: profileData,
+        loading: profileLoading,
+        error: profileError,
+    } = useFetch<User>(authUser ? `http://localhost:3000/user/${id}` : null);
 
-    if (!user && !authLoading) {
+    if (!authUser && !authLoading) {
         navigate("/login");
         return null;
     }
 
-    if (authLoading || userLoading) return <Loader />;
-    if (authError || userError) {
-        console.error(authError, userError);
+    if (authLoading || profileLoading) return <Loader />;
+    if (authError || profileError) {
+        console.error(authError, profileError);
         return <p>Något gick fel</p>;
     }
+
+    if (!profileData) return <p>Profil hittades inte</p>;
+
+    // Kolla om den inloggade användaren följer denna profil
+    const isFollowing = profileData.followers?.includes(authUser!.id) ?? false;
 
     return (
         <div className="content">
             <ProfileHead
-                userId={userData?.id}
-                username={userData?.username}
-                followers={userData?.followers}
-                follows={userData?.follows}
-                posts={userData?.posts}
-                isCurrentUser
+                userId={profileData.id}
+                username={profileData.username}
+                followers={profileData.followers}
+                follows={profileData.follows}
+                posts={profileData.posts}
+                follow={isFollowing}
+                isCurrentUser={profileData.id === authUser!.id}
             />
 
             <section>
                 <h2 className="text-xl mb-4">Inlägg</h2>
                 <div className="flex flex-col gap-4">
-                    {Array.isArray(userData?.posts) && userData.posts.length > 0 ? (
-                        userData.posts
+                    {Array.isArray(profileData.posts) && profileData.posts.length > 0 ? (
+                        profileData.posts
                             .slice()
                             .reverse()
                             .map((post, index) => (
@@ -60,8 +67,8 @@ export default function Profile() {
                                     date={post.created}
                                     text={post.text}
                                     user={{
-                                        id: userData.id,
-                                        username: userData.username,
+                                        id: profileData.id,
+                                        username: profileData.username,
                                     }}
                                 />
                             ))

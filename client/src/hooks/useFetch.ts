@@ -1,4 +1,3 @@
-// hooks/useFetch.ts
 import { useEffect, useState } from "react";
 
 function useFetch<T>(url: string | null) {
@@ -12,7 +11,9 @@ function useFetch<T>(url: string | null) {
         setLoading(true);
         setError(null);
 
-        fetch(url)
+        fetch(url, {
+            credentials: "include",
+        })
             .then((res) => {
                 if (!res.ok) throw new Error("Något gick fel vid hämtning.");
                 return res.json();

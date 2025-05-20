@@ -1,7 +1,7 @@
-import { useState } from "react";
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 export default function Login() {
     const [username, setUsername] = useState<string>("");
@@ -9,25 +9,28 @@ export default function Login() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
+    const { setUser } = useUser();
+
     const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
         setError(null);
 
         try {
-            const res = await axios.post(
+            await axios.post(
                 "http://localhost:3000/login",
                 { username, password },
                 {
                     withCredentials: true,
-                    headers: {
-                        "Access-Control-Allow-Origin": "*",
-                    },
                 }
             );
 
-            if (res.status === 200) {
-                navigate("/");
-            }
+            const res = await axios.get("http://localhost:3000/me", {
+                withCredentials: true,
+            });
+
+            setUser(res.data);
+
+            navigate("/");
         } catch (err) {
             const axiosError = err as AxiosError;
             if (axiosError.response?.status === 401) {
@@ -39,14 +42,12 @@ export default function Login() {
     };
 
     return (
-        <div className="flex items-center justify-center h-screen bg-gray-100">
-            <div className="w-full max-w-sm p-8 bg-white rounded-xl shadow-md">
-                <h2 className="text-2xl font-semibold text-center mb-6">
-                    Logga in
-                </h2>
+        <div className="flex items-center justify-center h-screen">
+            <div className="w-full max-w-sm p-8 bg-neutral-800 rounded-xl shadow-md">
+                <h2 className="text-2xl font-semibold text-center mb-6">Logga in</h2>
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-neutral-300">
                             Användarnamn
                         </label>
                         <input
@@ -54,12 +55,12 @@ export default function Login() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
-                            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200"
+                            className="mt-1 w-full px-4 py-2 border border-neutral-500 rounded-md shadow-sm focus:ring focus:ring-blue-200"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-neutral-300">
                             Lösenord
                         </label>
                         <input
@@ -67,7 +68,7 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200"
+                            className="mt-1 w-full px-4 py-2 border border-neutral-500 rounded-md shadow-sm focus:ring focus:ring-blue-200"
                         />
                     </div>
 
@@ -75,7 +76,7 @@ export default function Login() {
 
                     <button
                         type="submit"
-                        className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                        className="w-full py-2 px-4 bg-primary rounded-md cursor-pointer"
                     >
                         Logga in
                     </button>
