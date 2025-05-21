@@ -3,6 +3,7 @@ import { UserProvider } from "./context/UserContext";
 import Layout from "./Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import NewPost from "./pages/NewPost";
@@ -21,6 +22,7 @@ function App() {
                         <Route path="/u/:id" element={<User />} />
                     </Route>
                     <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
             </UserProvider>
         </Router>

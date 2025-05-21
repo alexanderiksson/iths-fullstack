@@ -40,24 +40,30 @@ export default function ProfileHead({
     return (
         <section className="flex flex-col gap-4 mb-8 pb-4 border-b border-neutral-800">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl">{username}</h1>
+                <div className="flex items-center gap-4">
+                    <img src="/profileplaceholder.jpg" width={64} className="rounded-full" alt="" />
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-3xl">{username}</h1>
+                        <div className="flex gap-4">
+                            <span>
+                                {followers?.length}{" "}
+                                <span className="text-neutral-400">följare</span>
+                            </span>
+                            <span>
+                                {follows?.length} <span className="text-neutral-400">följer</span>
+                            </span>
+                            <span>
+                                {posts?.length} <span className="text-neutral-400">Inlägg</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
                 {isCurrentUser && (
                     <button className="cursor-pointer" onClick={handleLogOut}>
                         Logga ut
                     </button>
                 )}
-            </div>
-
-            <div className="flex gap-4">
-                <span>
-                    {followers?.length} <span className="text-neutral-400">följare</span>
-                </span>
-                <span>
-                    {follows?.length} <span className="text-neutral-400">följer</span>
-                </span>
-                <span>
-                    {posts?.length} <span className="text-neutral-400">Inlägg</span>
-                </span>
             </div>
 
             {!isCurrentUser && (

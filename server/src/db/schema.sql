@@ -15,6 +15,13 @@ CREATE TABLE IF NOT EXISTS posts (
 CREATE TABLE IF NOT EXISTS users_follows (
     user_id INTEGER REFERENCES users(id),
     follows INTEGER REFERENCES users(id),
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, follows)
+);
+
+CREATE TABLE IF NOT EXISTS users_likes (
+    user_id INTEGER REFERENCES users(id),
+    post_id INTEGER REFERENCES posts(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, post_id)
 );

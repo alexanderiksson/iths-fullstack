@@ -1,11 +1,11 @@
 import { useState, type FormEvent } from "react";
-import axios, { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../context/UserContext";
-import { Link } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
+import { Link } from "react-router-dom";
+import axios, { AxiosError } from "axios";
+import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Register() {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,7 @@ export default function Login() {
     const navigate = useNavigate();
     const { setUser } = useUser();
 
-    const handleLogin = async (e: FormEvent) => {
+    const handleRegister = async (e: FormEvent) => {
         e.preventDefault();
 
         setLoading(true);
@@ -22,7 +22,7 @@ export default function Login() {
 
         try {
             await axios.post(
-                "/api/login",
+                "/api/register",
                 { username, password },
                 {
                     withCredentials: true,
@@ -39,8 +39,8 @@ export default function Login() {
             navigate("/");
         } catch (err) {
             const axiosError = err as AxiosError;
-            if (axiosError.response?.status === 401) {
-                setError("Fel användarnamn eller lösenord");
+            if (axiosError.response?.status === 409) {
+                setError("Användarnamnet är upptaget");
             } else {
                 setError("Något gick fel. Försök igen.");
             }
@@ -50,24 +50,24 @@ export default function Login() {
 
     return (
         <div className="flex items-center justify-center h-screen">
-            <div className="w-full max-w-sm p-8 bg-neutral-800 rounded-xl shadow-md flex flex-col gap-4">
-                <h2 className="text-2xl font-semibold text-center">Logga in</h2>
+            <div className="w-full max-w-sm p-8 bg-neutral-800 rounded-xl shadow-lg flex flex-col gap-8">
+                <h2 className="text-2xl font-semibold text-center">Skapa konto</h2>
 
                 <AuthForm
                     username={username}
                     password={password}
                     onUsernameChange={(e) => setUsername(e.target.value)}
                     onPasswordChange={(e) => setPassword(e.target.value)}
-                    onSubmit={handleLogin}
-                    buttonText="Logga in"
+                    onSubmit={handleRegister}
+                    buttonText="Skapa konto"
                     error={error}
                     loading={loading}
                 />
 
                 <p className="text-sm">
-                    Inget konto?{" "}
-                    <Link to="/register" className="text-blue-500 underline">
-                        Skapa konto
+                    Har du redan ett konto?{" "}
+                    <Link to="/login" className="text-blue-500 underline">
+                        Logga in
                     </Link>
                 </p>
             </div>

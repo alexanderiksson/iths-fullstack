@@ -15,11 +15,17 @@ declare global {
     }
 }
 
+router.get("/users", async (req, res) => {
+    const users = await pool.query("SELECT * FROM users");
+
+    res.json(users.rows);
+});
+
 router.get("/check-auth", auth, (req, res) => {
     res.json({ loggedIn: true, user: req.user });
 });
 
-router.post("/signup", async (req, res) => {
+router.post("/register", async (req, res) => {
     const { username, password } = req.body;
 
     // Kolla om användarnamn och lösenord är ifyllt
@@ -48,10 +54,10 @@ router.post("/signup", async (req, res) => {
         const hash = await bcrypt.hash(password, 10);
 
         // Spara användaren i databasen
-        await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
-            username,
-            hash,
-        ]);
+        const result = await pool.query(
+            "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id",
+            [username, hash]
+        );
 
         if (!jwtSecret) {
             console.error("JWT_SECRET is not defined");
@@ -60,7 +66,7 @@ router.post("/signup", async (req, res) => {
         }
 
         // Generera en ny token åt användaren
-        const token = jwt.sign({ username }, jwtSecret, { expiresIn: "1h" });
+        const token = jwt.sign({ username, id: result.rows[0].id }, jwtSecret, { expiresIn: "1h" });
 
         // Skicka cookie till klienten med token
         res.cookie("token", token, {
@@ -167,6 +173,27 @@ router.post("/logout", (req, res) => {
     });
 
     res.sendStatus(200);
+});
+
+router.get("/search-users", auth, async (req, res) => {
+    const query = req.query.query;
+
+    if (!query) {
+        res.sendStatus(400);
+        return;
+    }
+
+    try {
+        const result = await pool.query("SELECT id, username FROM users WHERE username ILIKE $1", [
+            `%${query}%`,
+        ]);
+        res.json(result.rows);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
 });
 
 export default router;
