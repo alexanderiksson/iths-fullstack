@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 export default function Login() {
     const [username, setUsername] = useState<string>("");
@@ -58,7 +59,6 @@ export default function Login() {
                             className="mt-1 w-full px-4 py-2 border border-neutral-500 rounded-md shadow-sm focus:ring focus:ring-blue-200"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm font-medium text-neutral-300">
                             Lösenord
@@ -71,15 +71,19 @@ export default function Login() {
                             className="mt-1 w-full px-4 py-2 border border-neutral-500 rounded-md shadow-sm focus:ring focus:ring-blue-200"
                         />
                     </div>
-
                     {error && <p className="text-sm text-red-600">{error}</p>}
-
                     <button
                         type="submit"
                         className="w-full py-2 px-4 bg-primary rounded-md cursor-pointer"
                     >
                         Logga in
                     </button>
+                    <p className="text-sm">
+                        Inget konto?{" "}
+                        <Link to="/register" className="text-blue-500 underline">
+                            Skapa konto
+                        </Link>
+                    </p>
                 </form>
             </div>
         </div>
