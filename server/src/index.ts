@@ -5,6 +5,7 @@ import postRoutes from "./routes/postRoutes";
 import followRoutes from "./routes/followRoutes";
 import cookieParser from "cookie-parser";
 import path from "path";
+import devRoutes from "./routes/devRoutes";
 
 const app = express();
 const port = 3000;
@@ -18,6 +19,8 @@ app.use(cookieParser());
 app.use("/api", userRoutes);
 app.use("/api", postRoutes);
 app.use("/api", followRoutes);
+
+app.use("/dev", devRoutes);
 
 // Frontend
 app.use(express.static(path.join(path.resolve(), "../public")));

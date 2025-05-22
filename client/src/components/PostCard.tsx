@@ -43,8 +43,16 @@ export default function PostCard({ date, text, user }: PostCardProps) {
             <p className="mb-2">{text}</p>
 
             <div className="flex items-center gap-4">
-                <FaHeart color="grey" size={20} className="cursor-pointer" />
-                <FaComment color="grey" size={20} className="cursor-pointer" />
+                <FaHeart
+                    color="grey"
+                    size={20}
+                    className="cursor-pointer hover:fill-neutral-600 transition-all duration-100"
+                />
+                <FaComment
+                    color="grey"
+                    size={20}
+                    className="cursor-pointer hover:fill-neutral-600 transition-all duration-100"
+                />
             </div>
         </div>
     );

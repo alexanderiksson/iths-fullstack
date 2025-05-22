@@ -19,7 +19,7 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
 
         const user = jwt.verify(token, jwtSecret);
 
-        (req as any).user = user;
+        req.user = user;
 
         next();
         return;
