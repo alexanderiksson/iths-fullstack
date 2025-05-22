@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useFetch from "../hooks/useFetch";
 import type { User } from "../types/User";
@@ -6,6 +7,8 @@ import PostCard from "../components/PostCard";
 import ProfileHead from "../components/ProfileHead";
 
 export default function Profile() {
+    const navigate = useNavigate();
+
     const {
         user,
         loading: authLoading,
@@ -21,6 +24,11 @@ export default function Profile() {
         loading: userLoading,
         error: userError,
     } = useFetch<User>(user ? `/api/user/${user.id}` : null);
+
+    if (!user && !authLoading) {
+        navigate("/login");
+        return null;
+    }
 
     if (authLoading || userLoading) return <Loader />;
     if (authError || userError) {

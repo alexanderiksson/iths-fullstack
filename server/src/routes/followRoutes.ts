@@ -5,10 +5,10 @@ import auth from "../middlewares/auth";
 const router = express.Router();
 
 router.post("/follow/:id", auth, async (req, res) => {
-    const followerId = req.user.id;
+    const followerId = req.user?.id;
     const followingId = req.params.id;
 
-    if (followerId === followingId) {
+    if (Number(followerId) === Number(followingId)) {
         res.status(400).send("Kan inte följa dig själv");
         return;
     }
@@ -28,7 +28,7 @@ router.post("/follow/:id", auth, async (req, res) => {
 });
 
 router.delete("/follow/:id", auth, async (req, res) => {
-    const followerId = req.user.id;
+    const followerId = req.user?.id;
     const followingId = req.params.id;
 
     try {

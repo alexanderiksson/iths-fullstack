@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import type { User } from "../types/User";
 
 export default function useAuth() {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -16,26 +13,21 @@ export default function useAuth() {
                     withCredentials: true,
                 });
 
-                if (response.data.loggedIn && response.data.user) {
+                if (response.data.loggedIn) {
                     setUser(response.data.user);
-                    setError(null);
                 } else {
                     setUser(null);
-                    setError("Inte inloggad");
-                    navigate("/login");
                 }
             } catch (err) {
-                console.error(err);
-                setUser(null);
                 setError(err);
-                navigate("/login");
+                setUser(null);
             } finally {
                 setLoading(false);
             }
         };
 
         checkAuth();
-    }, [navigate]);
+    }, []);
 
     return { user, loading, error };
 }

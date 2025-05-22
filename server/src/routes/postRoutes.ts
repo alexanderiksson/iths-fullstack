@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/feed", auth, async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user?.id;
 
         const followsResult = await pool.query(
             "SELECT follows FROM users_follows WHERE user_id = $1",
@@ -59,7 +59,7 @@ router.post("/new-post", auth, async (req, res) => {
 });
 
 router.post("/like/:id", auth, async (req, res) => {
-    const userId = req.user.id;
+    const userId = req.user?.id;
     const postId = req.params.id;
 
     try {
@@ -77,7 +77,7 @@ router.post("/like/:id", auth, async (req, res) => {
 });
 
 router.delete("/like/:id", auth, async (req, res) => {
-    const userId = req.user.id;
+    const userId = req.user?.id;
     const postId = req.params.id;
 
     try {
