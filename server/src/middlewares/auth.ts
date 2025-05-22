@@ -5,7 +5,7 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies.token;
 
     if (!token) {
-        res.status(200).json({ loggedIn: false });
+        res.status(401).json({ loggedIn: false });
         return;
     }
 
@@ -19,12 +19,12 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
 
         const user = jwt.verify(token, jwtSecret);
 
-        req.user = user;
+        (req.user as unknown) = user;
 
         next();
         return;
     } catch {
-        res.status(200).json({ loggedIn: false });
+        res.status(401).json({ loggedIn: false });
         return;
     }
 }

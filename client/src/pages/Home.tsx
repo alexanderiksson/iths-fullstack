@@ -1,25 +1,16 @@
-import useAuth from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import type { User } from "../types/User";
 import useFetch from "../hooks/useFetch";
 import PostCard from "../components/PostCard";
 import type { Post } from "../types/Post";
 import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 export default function Home() {
-    const { user, loading, error } = useAuth() as {
-        user: User | null;
-        loading: boolean;
-        error: unknown;
-    };
+    const { user, loading, error } = useUser();
     const { data: feed, loading: feedLoading, error: feedError } = useFetch<Post[]>("/api/feed");
 
-    const navigate = useNavigate();
-
-    if (loading || feedLoading) return <Loader />;
-    if (error || feedError) return <p>Något gick fel</p>;
-    if (!user) navigate("/login");
+    if (feedLoading || loading) return <Loader />;
+    if (feedError || error) return <p>Något gick fel</p>;
 
     return (
         <div className="content">
@@ -38,15 +29,14 @@ export default function Home() {
                 <>
                     <p className="mb-2 text-lg">Ditt flöde</p>
                     <div className="flex flex-col gap-4">
-                        {Array.isArray(feed) &&
-                            feed.map((post, index) => (
-                                <PostCard
-                                    key={index}
-                                    date={post.created}
-                                    text={post.text}
-                                    user={{ id: post.user_id, username: post.username }}
-                                />
-                            ))}
+                        {feed.map((post, index) => (
+                            <PostCard
+                                key={index}
+                                date={post.created}
+                                text={post.text}
+                                user={{ id: post.user_id, username: post.username }}
+                            />
+                        ))}
                     </div>
                 </>
             )}
