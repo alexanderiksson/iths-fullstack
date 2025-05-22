@@ -28,21 +28,17 @@ export default function Search() {
             <h1 className="text-2xl mb-4">Sök</h1>
 
             <div>
-                <div className="w-full flex gap-2">
+                <div className="w-full flex">
                     <input
                         type="text"
                         placeholder="Sök"
                         value={query}
-                        onChange={(e) => setQuery(e.target.value)}
+                        onChange={(e) => {
+                            setQuery(e.target.value);
+                            handleSearch();
+                        }}
                         className="bg-neutral-800/50 px-4 py-2 border border-neutral-500/10 rounded-lg shadow-sm placeholder:text-sm flex-1"
                     />
-                    <button
-                        onClick={handleSearch}
-                        className="inline-flex bg-primary py-2 px-6 rounded-lg text-white cursor-pointer
-                    "
-                    >
-                        Sök
-                    </button>
                 </div>
                 <ul className="flex flex-col mt-4 divide-y divide-neutral-700">
                     {!loading ? (
