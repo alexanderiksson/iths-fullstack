@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import auth from "../middlewares/auth";
 
 const router = express.Router();
-const jwtSecret = process.env.JWT_SECRET as string | undefined;
+const jwtSecret = process.env.JWT_SECRET;
 
 declare global {
     namespace Express {
@@ -14,12 +14,6 @@ declare global {
         }
     }
 }
-
-router.get("/users", async (req, res) => {
-    const users = await pool.query("SELECT * FROM users");
-
-    res.json(users.rows);
-});
 
 router.get("/check-auth", auth, (req, res) => {
     res.json({ loggedIn: true, user: req.user });
