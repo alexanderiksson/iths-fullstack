@@ -2,7 +2,6 @@ import { useState, type FormEvent } from "react";
 import AuthForm from "../components/AuthForm";
 import { Link } from "react-router-dom";
 import axios, { AxiosError } from "axios";
-import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
@@ -12,7 +11,6 @@ export default function Register() {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-    const { setUser } = useUser();
 
     const handleRegister = async (e: FormEvent) => {
         e.preventDefault();
@@ -29,13 +27,6 @@ export default function Register() {
                 }
             );
 
-            const res = await axios.get("/api/me", {
-                withCredentials: true,
-            });
-
-            setUser(res.data);
-            setLoading(false);
-
             navigate("/");
         } catch (err) {
             const axiosError = err as AxiosError;
@@ -44,6 +35,7 @@ export default function Register() {
             } else {
                 setError("Något gick fel. Försök igen.");
             }
+        } finally {
             setLoading(false);
         }
     };

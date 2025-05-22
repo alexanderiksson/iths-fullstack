@@ -5,11 +5,15 @@
     --primary: #1076d5;
     --background: #131313;
     --text: #fff;
+    --error: #d21f1f;
+    --success: #129b12;
 }
 
 @theme {
     --color-primary: var(--primary);
     --color-background: var(--background);
+    --color-error: var(--error);
+    --color-success: var(--success);
 }
 
 body,

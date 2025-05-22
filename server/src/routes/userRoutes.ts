@@ -7,14 +7,6 @@ import auth from "../middlewares/auth";
 const router = express.Router();
 const jwtSecret = process.env.JWT_SECRET;
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: any;
-        }
-    }
-}
-
 router.get("/check-auth", auth, (req, res) => {
     res.json({ loggedIn: true, user: req.user });
 });
@@ -152,12 +144,16 @@ router.get("/user/:user", auth, async (req, res) => {
         };
 
         res.status(200).json(data);
-    } catch (err) {}
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
 });
 
 router.get("/me", auth, (req, res) => {
-    const { id, username } = req.user;
-    res.json({ id, username });
+    const user = req.user;
+    res.json({ id: user?.id, username: user?.username });
 });
 
 router.post("/logout", (req, res) => {

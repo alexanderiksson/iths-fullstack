@@ -4,15 +4,24 @@ import useAuth from "../hooks/useAuth";
 import Loader from "../components/Loader";
 
 export default function NewPost() {
-    const { loading, error } = useAuth();
+    const { loading: authLoading, error: authError } = useAuth();
 
     const [text, setText] = useState("");
     const [msg, setMsg] = useState<string | null>(null);
+    const [msgStyle, setMsgStyle] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    if (loading) return <Loader />;
-    if (error) return <p>Något gick fel</p>;
+    if (authLoading) return <Loader />;
+    if (authError) return <p>Något gick fel</p>;
 
     const handlePost = async () => {
+        if (!text) {
+            setMsgStyle("text-error");
+            setMsg("Ditt inlägg får inte vara tomt.");
+            return;
+        }
+
+        setLoading(true);
         setMsg(null);
 
         try {
@@ -25,12 +34,16 @@ export default function NewPost() {
             );
 
             if (res.status === 201) {
-                setMsg("Inlägg publicerat");
+                setMsgStyle("text-success");
+                setMsg("Inlägg publicerat!");
                 setText("");
             }
         } catch (err) {
             console.error(err);
+            setMsgStyle("text-error");
             setMsg("Något gick fel");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -44,16 +57,17 @@ export default function NewPost() {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Skriv ett inlägg"
+                maxLength={500}
                 required
             />
 
-            {msg && <p className="pb-4">{msg}</p>}
+            {msg && <p className={`mb-4 ${msgStyle}`}>{msg}</p>}
 
             <button
                 className="flex bg-primary py-2 px-6 rounded-lg text-white cursor-pointer"
                 onClick={handlePost}
             >
-                Publicera
+                {loading ? "Publicerar..." : "Publicera"}
             </button>
         </div>
     );

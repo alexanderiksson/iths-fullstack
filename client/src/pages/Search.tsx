@@ -14,6 +14,7 @@ export default function Search() {
 
     const handleSearch = async () => {
         if (!query) return;
+
         setLoading(true);
 
         try {
@@ -21,9 +22,9 @@ export default function Search() {
             setResults(response.data);
         } catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
 
     if (AuthLoading) return <Loader />;

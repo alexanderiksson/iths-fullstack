@@ -37,6 +37,7 @@ export default function User() {
                 posts={profileData.posts}
                 follow={isFollowing}
                 isCurrentUser={profileData.id === authUser!.id}
+                currentUser={authUser!.id}
             />
 
             <section>

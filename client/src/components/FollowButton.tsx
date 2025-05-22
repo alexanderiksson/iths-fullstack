@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useUser } from "../context/UserContext";
 
 interface FollowButtonProps {
+    userId: number | undefined;
     targetUserId: number | undefined;
     initialIsFollowing: boolean | undefined;
 }
 
-export default function FollowButton({ targetUserId, initialIsFollowing }: FollowButtonProps) {
-    const { user } = useUser();
+export default function FollowButton({
+    userId,
+    targetUserId,
+    initialIsFollowing,
+}: FollowButtonProps) {
     const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
     const [loading, setLoading] = useState(false);
 
@@ -16,10 +19,11 @@ export default function FollowButton({ targetUserId, initialIsFollowing }: Follo
         setIsFollowing(initialIsFollowing);
     }, [initialIsFollowing]);
 
-    if (!user || user.id === targetUserId) return null;
+    if (!userId || userId === targetUserId) return null;
 
     const toggleFollow = async () => {
         setLoading(true);
+
         try {
             if (isFollowing) {
                 await axios.delete(`/api/follow/${targetUserId}`, {

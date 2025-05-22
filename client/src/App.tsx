@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { UserProvider } from "./context/UserContext";
 import Layout from "./Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -12,19 +11,17 @@ import User from "./pages/User";
 function App() {
     return (
         <Router>
-            <UserProvider>
-                <Routes>
-                    <Route element={<Layout />}>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/new-post" element={<NewPost />} />
-                        <Route path="/search" element={<Search />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/u/:id" element={<User />} />
-                    </Route>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                </Routes>
-            </UserProvider>
+            <Routes>
+                <Route element={<Layout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/new-post" element={<NewPost />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/u/:id" element={<User />} />
+                </Route>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+            </Routes>
         </Router>
     );
 }

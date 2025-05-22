@@ -10,6 +10,7 @@ interface ProfileProps {
     posts: Post[] | undefined;
     follow?: boolean;
     isCurrentUser?: boolean;
+    currentUser?: number;
 }
 
 export default function ProfileHead({
@@ -20,6 +21,7 @@ export default function ProfileHead({
     posts,
     follow,
     isCurrentUser,
+    currentUser,
 }: ProfileProps) {
     const handleLogOut = async () => {
         try {
@@ -67,7 +69,11 @@ export default function ProfileHead({
 
             {!isCurrentUser && (
                 <div>
-                    <FollowButton targetUserId={userId} initialIsFollowing={follow} />
+                    <FollowButton
+                        userId={currentUser}
+                        targetUserId={userId}
+                        initialIsFollowing={follow}
+                    />
                 </div>
             )}
         </section>

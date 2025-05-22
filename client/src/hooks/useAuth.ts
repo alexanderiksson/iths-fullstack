@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import type { User } from "../types/User";
 
-export default function useAuth() {
+export default function useAuth({ redirectToLogin = true } = {}) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<unknown>(null);
@@ -22,20 +22,20 @@ export default function useAuth() {
                 } else {
                     setUser(null);
                     setError("Inte inloggad");
-                    navigate("/login");
+                    if (redirectToLogin) navigate("/login");
                 }
             } catch (err) {
                 console.error(err);
                 setUser(null);
                 setError(err);
-                navigate("/login");
+                if (redirectToLogin) navigate("/login");
             } finally {
                 setLoading(false);
             }
         };
 
         checkAuth();
-    }, [navigate]);
+    }, [navigate, redirectToLogin]);
 
     return { user, loading, error };
 }
