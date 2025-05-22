@@ -1,6 +1,4 @@
 import useAuth from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import type { User } from "../types/User";
 import useFetch from "../hooks/useFetch";
 import PostCard from "../components/PostCard";
 import type { Post } from "../types/Post";
@@ -8,18 +6,11 @@ import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
 
 export default function Home() {
-    const { user, loading, error } = useAuth() as {
-        user: User | null;
-        loading: boolean;
-        error: unknown;
-    };
+    const { user, loading, error } = useAuth();
     const { data: feed, loading: feedLoading, error: feedError } = useFetch<Post[]>("/api/feed");
-
-    const navigate = useNavigate();
 
     if (loading || feedLoading) return <Loader />;
     if (error || feedError) return <p>Något gick fel</p>;
-    if (!user) navigate("/login");
 
     return (
         <div className="content">

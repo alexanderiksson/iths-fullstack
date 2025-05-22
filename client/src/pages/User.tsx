@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useFetch from "../hooks/useFetch";
 import type { User } from "../types/User";
@@ -7,29 +7,15 @@ import PostCard from "../components/PostCard";
 import ProfileHead from "../components/ProfileHead";
 
 export default function User() {
-    const navigate = useNavigate();
     const { id } = useParams();
 
-    const {
-        user: authUser,
-        loading: authLoading,
-        error: authError,
-    } = useAuth() as {
-        user: User | null;
-        loading: boolean;
-        error: unknown;
-    };
+    const { user: authUser, loading: authLoading, error: authError } = useAuth();
 
     const {
         data: profileData,
         loading: profileLoading,
         error: profileError,
     } = useFetch<User>(authUser ? `/api/user/${id}` : null);
-
-    if (!authUser && !authLoading) {
-        navigate("/login");
-        return null;
-    }
 
     if (authLoading || profileLoading) return <Loader />;
     if (authError || profileError) {
