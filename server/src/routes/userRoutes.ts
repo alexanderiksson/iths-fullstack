@@ -122,6 +122,21 @@ router.get("/user/:user", auth, async (req, res) => {
 
         const posts = await pool.query("SELECT * FROM posts WHERE user_id = $1", [user]);
 
+        const postIds = posts.rows.map((post) => post.id);
+        let likes = [];
+        if (postIds.length > 0) {
+            const likesResult = await pool.query(
+                "SELECT * FROM users_likes WHERE post_id = ANY($1::int[])",
+                [postIds]
+            );
+            likes = likesResult.rows;
+        }
+
+        const postsWithLikes = posts.rows.map((post) => ({
+            ...post,
+            likes: likes.filter((like) => like.post_id === post.id).map((like) => like.user_id),
+        }));
+
         if (userInfo.rows.length === 0) {
             res.sendStatus(404);
             return;
@@ -132,7 +147,7 @@ router.get("/user/:user", auth, async (req, res) => {
             username: userInfo.rows[0].username,
             followers: followers.rows.map((follower) => follower.user_id),
             follows: follows.rows.map((follow) => follow.follows),
-            posts: [...posts.rows],
+            posts: [...postsWithLikes],
         };
 
         res.status(200).json(data);

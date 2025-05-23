@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import type { Post } from "../types/Post";
+import type { User } from "../types/User";
 import PostCard from "../components/PostCard";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 
 export default function Home() {
+    const { data: user } = useFetch<User>("/api/me");
     const { data: feed, loading, error } = useFetch<Post[]>("/api/feed");
 
     if (loading) return <Loader />;
-    if (error) return <Error />;
+    if (error || !user) return <Error />;
 
     return (
         <div className="content">
@@ -33,6 +35,9 @@ export default function Home() {
                                     date={post.created}
                                     text={post.text}
                                     user={{ id: post.user_id, username: post.username }}
+                                    liked={post.likes?.includes(user.id) ?? false}
+                                    postId={post.id}
+                                    likesCount={post.likes?.length ?? 0}
                                 />
                             ))}
                     </div>

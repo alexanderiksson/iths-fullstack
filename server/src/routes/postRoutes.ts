@@ -21,10 +21,18 @@ router.get("/feed", auth, async (req, res) => {
         }
 
         const postsResult = await pool.query(
-            `SELECT posts.*, users.username
+            `SELECT
+            posts.*,
+            users.username,
+            COALESCE(
+            array_agg(users_likes.user_id) FILTER (WHERE users_likes.user_id IS NOT NULL),
+            '{}'
+            ) AS likes
              FROM posts
              JOIN users ON posts.user_id = users.id
+             LEFT JOIN users_likes ON users_likes.post_id = posts.id
              WHERE posts.user_id = ANY($1)
+             GROUP BY posts.id, users.username
              ORDER BY posts.created DESC`,
             [followsIds]
         );
@@ -64,7 +72,7 @@ router.post("/like/:id", auth, async (req, res) => {
 
     try {
         await pool.query(
-            "INSERT INTO users_likes (user_id, post_id) VALUES ($1, $2 ON CONFLICT DO NOTHING)",
+            "INSERT INTO users_likes (user_id, post_id) VALUES ($1, $2)  ON CONFLICT DO NOTHING",
             [userId, postId]
         );
         res.sendStatus(200);

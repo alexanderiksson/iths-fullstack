@@ -44,6 +44,9 @@ export default function Profile() {
                                         id: profile.id,
                                         username: profile.username,
                                     }}
+                                    liked={post.likes?.includes(profile.id) ?? false}
+                                    postId={post.id}
+                                    likesCount={post.likes?.length ?? 0}
                                 />
                             ))
                     ) : (

@@ -22,7 +22,7 @@ export default function User() {
     } = useFetch<User>("/api/me");
 
     if (userLoading || currentUserLoading) return <Loader />;
-    if (userError || currentUserError || !user) return <Error />;
+    if (userError || currentUserError || !user || !currentUser) return <Error />;
 
     const isFollowing = user.followers?.includes(currentUser!.id) ?? false;
 
@@ -55,6 +55,9 @@ export default function User() {
                                         id: user.id,
                                         username: user.username,
                                     }}
+                                    liked={post.likes?.includes(currentUser.id) ?? false}
+                                    postId={post.id}
+                                    likesCount={post.likes?.length ?? 0}
                                 />
                             ))
                     ) : (

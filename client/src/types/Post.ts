@@ -4,4 +4,5 @@ export interface Post {
     user_id: number;
     created: string;
     username: string;
+    likes: number[];
 }
