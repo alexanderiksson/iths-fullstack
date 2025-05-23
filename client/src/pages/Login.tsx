@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import axios, { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
 
 export default function Login() {

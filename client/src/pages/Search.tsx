@@ -1,13 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import type { User } from "../types/User";
-import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
-import useAuth from "../hooks/useAuth";
 
 export default function Search() {
-    const { loading: AuthLoading, error: AuthError } = useAuth();
-
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
@@ -26,9 +23,6 @@ export default function Search() {
             setLoading(false);
         }
     };
-
-    if (AuthLoading) return <Loader />;
-    if (AuthError) return <p>Något gick fel</p>;
 
     return (
         <div className="content">

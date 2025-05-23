@@ -1,50 +1,49 @@
 import { useParams } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
 import useFetch from "../hooks/useFetch";
 import type { User } from "../types/User";
-import Loader from "../components/Loader";
 import PostCard from "../components/PostCard";
 import ProfileHead from "../components/ProfileHead";
+import Loader from "../components/Loader";
+import Error from "../components/Error";
 
 export default function User() {
     const { id } = useParams();
 
-    const { user: authUser, loading: authLoading, error: authError } = useAuth();
+    const {
+        data: user,
+        loading: userLoading,
+        error: userError,
+    } = useFetch<User>(`/api/user/${id}`);
 
     const {
-        data: profileData,
-        loading: profileLoading,
-        error: profileError,
-    } = useFetch<User>(authUser ? `/api/user/${id}` : null);
+        data: currentUser,
+        loading: currentUserLoading,
+        error: currentUserError,
+    } = useFetch<User>("/api/me");
 
-    if (authLoading || profileLoading) return <Loader />;
-    if (authError || profileError) {
-        console.error(authError, profileError);
-        return <p>Något gick fel</p>;
-    }
+    if (userLoading || currentUserLoading) return <Loader />;
+    if (userError || currentUserError || !user) return <Error />;
 
-    if (!profileData) return <p>Profil hittades inte</p>;
-
-    const isFollowing = profileData.followers?.includes(authUser!.id) ?? false;
+    const isFollowing = user.followers?.includes(currentUser!.id) ?? false;
 
     return (
         <div className="content">
             <ProfileHead
-                userId={profileData.id}
-                username={profileData.username}
-                followers={profileData.followers}
-                follows={profileData.follows}
-                posts={profileData.posts}
+                userId={user.id}
+                username={user.username}
+                followers={user.followers}
+                follows={user.follows}
+                posts={user.posts}
                 follow={isFollowing}
-                isCurrentUser={profileData.id === authUser!.id}
-                currentUser={authUser!.id}
+                isCurrentUser={user.id === currentUser!.id}
+                currentUser={currentUser!.id}
             />
 
             <section>
                 <h2 className="text-xl mb-4">Inlägg</h2>
                 <div className="flex flex-col gap-4">
-                    {Array.isArray(profileData.posts) && profileData.posts.length > 0 ? (
-                        profileData.posts
+                    {Array.isArray(user.posts) && user.posts.length > 0 ? (
+                        user.posts
                             .slice()
                             .reverse()
                             .map((post, index) => (
@@ -53,8 +52,8 @@ export default function User() {
                                     date={post.created}
                                     text={post.text}
                                     user={{
-                                        id: profileData.id,
-                                        username: profileData.username,
+                                        id: user.id,
+                                        username: user.username,
                                     }}
                                 />
                             ))

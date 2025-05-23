@@ -1,21 +1,18 @@
-import useAuth from "../hooks/useAuth";
-import useFetch from "../hooks/useFetch";
-import PostCard from "../components/PostCard";
-import type { Post } from "../types/Post";
-import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+import type { Post } from "../types/Post";
+import PostCard from "../components/PostCard";
+import Loader from "../components/Loader";
+import Error from "../components/Error";
 
 export default function Home() {
-    const { user, loading, error } = useAuth();
-    const { data: feed, loading: feedLoading, error: feedError } = useFetch<Post[]>("/api/feed");
+    const { data: feed, loading, error } = useFetch<Post[]>("/api/feed");
 
-    if (loading || feedLoading) return <Loader />;
-    if (error || feedError) return <p>Något gick fel</p>;
+    if (loading) return <Loader />;
+    if (error) return <Error />;
 
     return (
         <div className="content">
-            <h1 className="text-2xl mb-4">Välkommen, {user?.username}</h1>
-
             <Link
                 to="/new-post"
                 className="inline-flex bg-primary py-2 px-6 rounded-lg text-white cursor-pointer mb-12"

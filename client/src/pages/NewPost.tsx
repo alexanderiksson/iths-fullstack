@@ -1,18 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
-import useAuth from "../hooks/useAuth";
-import Loader from "../components/Loader";
 
 export default function NewPost() {
-    const { loading: authLoading, error: authError } = useAuth();
-
     const [text, setText] = useState("");
     const [msg, setMsg] = useState<string | null>(null);
     const [msgStyle, setMsgStyle] = useState("");
     const [loading, setLoading] = useState(false);
-
-    if (authLoading) return <Loader />;
-    if (authError) return <p>Något gick fel</p>;
 
     const handlePost = async () => {
         if (!text) {
