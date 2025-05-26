@@ -26,7 +26,7 @@ export default function ProfileHead({
     const handleLogOut = async () => {
         try {
             await axios.post(
-                "/api/logout",
+                "/api/auth/logout",
                 {},
                 {
                     withCredentials: true,

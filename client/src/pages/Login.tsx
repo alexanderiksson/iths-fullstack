@@ -19,7 +19,7 @@ export default function Login() {
 
         try {
             await axios.post(
-                "/api/login",
+                "/api/auth/login",
                 { username, password },
                 {
                     withCredentials: true,

@@ -13,13 +13,13 @@ export default function User() {
         data: user,
         loading: userLoading,
         error: userError,
-    } = useFetch<User>(`/api/user/${id}`);
+    } = useFetch<User>(`/api/users/user/${id}`);
 
     const {
         data: currentUser,
         loading: currentUserLoading,
         error: currentUserError,
-    } = useFetch<User>("/api/me");
+    } = useFetch<User>("/api/users/me");
 
     if (userLoading || currentUserLoading) return <Loader />;
     if (userError || currentUserError || !user || !currentUser) return <Error />;

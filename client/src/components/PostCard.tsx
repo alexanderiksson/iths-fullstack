@@ -14,7 +14,7 @@ interface PostCardProps {
     liked: boolean;
     postId: number;
     likesCount: number;
-    comments: Comment[];
+    comments?: Comment[];
 }
 
 export default function PostCard({
@@ -77,7 +77,7 @@ export default function PostCard({
                         size={20}
                         className="cursor-pointer hover:scale-110 transition-all duration-100"
                     />
-                    <span className="text-sm text-neutral-300">{comments.length}</span>
+                    <span className="text-sm text-neutral-300">{comments?.length}</span>
                 </div>
             </div>
         </div>

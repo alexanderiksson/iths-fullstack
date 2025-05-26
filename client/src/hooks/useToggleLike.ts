@@ -16,14 +16,14 @@ export default function useToggleLike(
         setIsLiking(true);
         try {
             if (isLiked) {
-                await axios.delete(`/api/like/${postId}`, {
+                await axios.delete(`/api/posts/like/${postId}`, {
                     withCredentials: true,
                 });
                 setIsLiked(false);
                 setLikesCount((prev) => prev - 1);
             } else {
                 await axios.post(
-                    `/api/like/${postId}`,
+                    `/api/posts/like/${postId}`,
                     {},
                     {
                         withCredentials: true,

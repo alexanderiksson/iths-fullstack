@@ -15,7 +15,7 @@ export default function Search() {
         setLoading(true);
 
         try {
-            const response = await axios.get(`/api/search-users?query=${query}`);
+            const response = await axios.get(`/api/users/search-users?query=${query}`);
             setResults(response.data);
         } catch (err) {
             console.error(err);

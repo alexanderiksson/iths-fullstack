@@ -1,0 +1,135 @@
+import { Request, Response } from "express";
+import pool from "../db";
+
+export const getCurrentUser = async (req: Request, res: Response) => {
+    const user = req.user;
+    res.json({ id: user?.id, username: user?.username });
+};
+
+export const getUser = async (req: Request, res: Response) => {
+    const user = req.params.user;
+
+    try {
+        const userInfo = await pool.query("SELECT id, username FROM users WHERE id = $1", [user]);
+
+        const followers = await pool.query("SELECT * FROM users_follows WHERE follows = $1", [
+            user,
+        ]);
+
+        const follows = await pool.query("SELECT * FROM users_follows WHERE user_id = $1", [user]);
+
+        const posts = await pool.query("SELECT * FROM posts WHERE user_id = $1", [user]);
+
+        const postIds = posts.rows.map((post) => post.id);
+
+        let likes = [];
+        let comments = [];
+
+        if (postIds.length > 0) {
+            const likesResult = await pool.query(
+                "SELECT * FROM users_likes WHERE post_id = ANY($1::int[])",
+                [postIds]
+            );
+            const commentsResult = await pool.query(
+                "SELECT * FROM users_comments WHERE post_id = ANY($1::int[])",
+                [postIds]
+            );
+
+            likes = likesResult.rows;
+            comments = commentsResult.rows;
+        }
+
+        const allPosts = posts.rows.map((post) => ({
+            ...post,
+            likes: likes.filter((like) => like.post_id === post.id).map((like) => like.user_id),
+            comments: comments
+                .filter((comment) => comment.post_id === post.id)
+                .map((comment) => ({
+                    user_id: comment.user_id,
+                    comment: comment.comment,
+                    created: comment.created,
+                })),
+        }));
+
+        if (userInfo.rows.length === 0) {
+            res.sendStatus(404);
+            return;
+        }
+
+        const data = {
+            id: userInfo.rows[0].id,
+            username: userInfo.rows[0].username,
+            followers: followers.rows.map((follower) => follower.user_id),
+            follows: follows.rows.map((follow) => follow.follows),
+            posts: [...allPosts],
+        };
+
+        res.status(200).json(data);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+};
+
+export const searchUsers = async (req: Request, res: Response) => {
+    const query = req.query.query;
+
+    if (!query) {
+        res.sendStatus(400);
+        return;
+    }
+
+    try {
+        const result = await pool.query("SELECT id, username FROM users WHERE username ILIKE $1", [
+            `%${query}%`,
+        ]);
+        res.json(result.rows);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+};
+
+export const followUser = async (req: Request, res: Response) => {
+    const followerId = req.user?.id;
+    const followingId = req.params.id;
+
+    if (Number(followerId) === Number(followingId)) {
+        res.status(400).send("Kan inte följa dig själv");
+        return;
+    }
+
+    try {
+        await pool.query(
+            "INSERT INTO users_follows (user_id, follows) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+            [followerId, followingId]
+        );
+        res.sendStatus(200);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+};
+
+export const unfollowUser = async (req: Request, res: Response) => {
+    const followerId = req.user?.id;
+    const followingId = req.params.id;
+
+    try {
+        await pool.query("DELETE FROM users_follows WHERE user_id = $1 AND follows= $2", [
+            followerId,
+            followingId,
+        ]);
+        res.sendStatus(200);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+};

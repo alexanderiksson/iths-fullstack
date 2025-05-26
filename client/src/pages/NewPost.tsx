@@ -19,7 +19,7 @@ export default function NewPost() {
 
         try {
             const res = await axios.post(
-                "/api/new-post",
+                "/api/posts/new-post",
                 { text },
                 {
                     withCredentials: true,

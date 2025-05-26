@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
-import followRoutes from "./routes/followRoutes";
 import cookieParser from "cookie-parser";
 import path from "path";
 import devRoutes from "./routes/devRoutes";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
 const port = 3000;
@@ -16,9 +16,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use("/api", userRoutes);
-app.use("/api", postRoutes);
-app.use("/api", followRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
 
 app.use("/dev", devRoutes);
 

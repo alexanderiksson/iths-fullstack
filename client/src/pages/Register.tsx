@@ -19,7 +19,7 @@ export default function Register() {
 
         try {
             await axios.post(
-                "/api/register",
+                "/api/auth/register",
                 { username, password },
                 {
                     withCredentials: true,

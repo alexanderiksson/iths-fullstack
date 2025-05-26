@@ -6,13 +6,13 @@ import Loader from "../components/Loader";
 import Error from "../components/Error";
 
 export default function Profile() {
-    const { data: user, loading, error } = useFetch<User>("/api/me");
+    const { data: user, loading, error } = useFetch<User>("/api/users/me");
 
     const {
         data: profile,
         loading: profileLoading,
         error: profileError,
-    } = useFetch<User>(user ? `/api/user/${user.id}` : null);
+    } = useFetch<User>(user ? `/api/users/user/${user.id}` : null);
 
     if (loading || profileLoading) return <Loader />;
     if (error || profileError) return <Error />;

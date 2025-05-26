@@ -26,12 +26,12 @@ export default function FollowButton({
 
         try {
             if (isFollowing) {
-                await axios.delete(`/api/follow/${targetUserId}`, {
+                await axios.delete(`/api/users/follow/${targetUserId}`, {
                     withCredentials: true,
                 });
                 setIsFollowing(false);
             } else {
-                await axios.post(`/api/follow/${targetUserId}`, null, {
+                await axios.post(`/api/users/follow/${targetUserId}`, null, {
                     withCredentials: true,
                 });
                 setIsFollowing(true);

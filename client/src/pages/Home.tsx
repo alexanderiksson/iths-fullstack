@@ -7,8 +7,8 @@ import Loader from "../components/Loader";
 import Error from "../components/Error";
 
 export default function Home() {
-    const { data: user } = useFetch<User>("/api/me");
-    const { data: feed, loading, error } = useFetch<Post[]>("/api/feed");
+    const { data: user } = useFetch<User>("/api/users/me");
+    const { data: feed, loading, error } = useFetch<Post[]>("/api/posts/feed");
 
     if (loading) return <Loader />;
     if (error || !user) return <Error />;
@@ -38,6 +38,7 @@ export default function Home() {
                                     liked={post.likes?.includes(user.id) ?? false}
                                     postId={post.id}
                                     likesCount={post.likes?.length ?? 0}
+                                    comments={post.comments}
                                 />
                             ))}
                     </div>
