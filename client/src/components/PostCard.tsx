@@ -38,7 +38,12 @@ export default function PostCard({
 
     return (
         <>
-            <CommentsModal isOpen={isOpen} onClose={() => setIsOpen(false)} comments={comments} />
+            <CommentsModal
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                comments={comments}
+                postId={postId}
+            />
             <div className="p-4 border border-white/5 rounded-lg flex flex-col gap-4 bg-neutral-800/50">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">

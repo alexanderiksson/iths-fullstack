@@ -22,8 +22,6 @@ export const getUser = async (req: Request, res: Response) => {
 
         const postIds = posts.rows.map((post) => post.id);
 
-        console.log;
-
         let likes = [];
         let comments = [];
 

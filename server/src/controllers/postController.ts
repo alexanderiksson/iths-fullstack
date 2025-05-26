@@ -44,6 +44,16 @@ export const getFeed = async (req: Request, res: Response) => {
             comments = commentsResult.rows;
         }
 
+        const userIds = comments.map((comment) => comment.user_id);
+        const commentUsernamesResult = await pool.query(
+            "SELECT id, username FROM users WHERE id = ANY($1::int[])",
+            [userIds]
+        );
+        const commentUsernamesMap = new Map<number, string>();
+        commentUsernamesResult.rows.forEach((row) => {
+            commentUsernamesMap.set(row.id, row.username);
+        });
+
         const allPosts = posts.rows.map((post) => ({
             ...post,
             likes: likes.filter((like) => like.post_id === post.id).map((like) => like.user_id),
@@ -51,6 +61,7 @@ export const getFeed = async (req: Request, res: Response) => {
                 .filter((comment) => comment.post_id === post.id)
                 .map((comment) => ({
                     user_id: comment.user_id,
+                    username: commentUsernamesMap.get(comment.user_id) || null,
                     comment: comment.comment,
                     created: comment.created,
                 })),
