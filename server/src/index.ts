@@ -1,9 +1,10 @@
 import express from "express";
+import path from "path";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
-import cookieParser from "cookie-parser";
-import path from "path";
 import devRoutes from "./routes/devRoutes";
 import authRoutes from "./routes/authRoutes";
 
