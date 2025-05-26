@@ -1,5 +1,6 @@
 export interface Comment {
     user_id: number;
+    username: string;
     comment: string;
     created: string;
 }

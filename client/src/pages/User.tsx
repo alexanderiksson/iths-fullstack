@@ -58,6 +58,7 @@ export default function User() {
                                     liked={post.likes?.includes(currentUser.id) ?? false}
                                     postId={post.id}
                                     likesCount={post.likes?.length ?? 0}
+                                    comments={post.comments}
                                 />
                             ))
                     ) : (
