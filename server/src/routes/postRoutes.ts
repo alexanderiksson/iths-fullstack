@@ -72,7 +72,7 @@ router.post("/like/:id", auth, async (req, res) => {
 
     try {
         await pool.query(
-            "INSERT INTO users_likes (user_id, post_id) VALUES ($1, $2)  ON CONFLICT DO NOTHING",
+            "INSERT INTO users_likes (user_id, post_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
             [userId, postId]
         );
         res.sendStatus(200);
@@ -92,6 +92,48 @@ router.delete("/like/:id", auth, async (req, res) => {
         await pool.query("DELETE FROM users_likes WHERE user_id = $1 AND post_id = $2", [
             userId,
             postId,
+        ]);
+        res.sendStatus(200);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+});
+
+router.post("/comment/:id", auth, async (req, res) => {
+    const userId = req.user?.id;
+    const postId = req.params.id;
+    const { comment } = req.body;
+
+    if (!comment) {
+        res.sendStatus(400);
+        return;
+    }
+
+    try {
+        await pool.query(
+            "INSERT INTO users_comments (user_id, post_id, comment) VALUES ($1, $2, $3)",
+            [userId, postId, comment]
+        );
+        res.sendStatus(200);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+});
+
+router.delete("/comment/:id", auth, async (req, res) => {
+    const userId = req.user?.id;
+    const commentId = req.params.id;
+
+    try {
+        await pool.query("DELETE FROM users_comments WHERE id = $1 AND user_id = $2", [
+            commentId,
+            userId,
         ]);
         res.sendStatus(200);
         return;

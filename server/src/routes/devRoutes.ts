@@ -51,4 +51,16 @@ router.get("/likes", async (req, res) => {
     }
 });
 
+router.get("/comments", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM users_comments");
+        res.json(result.rows);
+        return;
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+        return;
+    }
+});
+
 export default router;

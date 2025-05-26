@@ -25,3 +25,11 @@ CREATE TABLE IF NOT EXISTS users_likes (
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, post_id)
 );
+
+CREATE TABLE IF NOT EXISTS users_comments (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    post_id INTEGER REFERENCES posts(id),
+    comment TEXT NOT NULL CHECK (char_length(text) < 500),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
