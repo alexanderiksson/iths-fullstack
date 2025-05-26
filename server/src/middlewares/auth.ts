@@ -45,6 +45,7 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
         res.status(401).json({ loggedIn: false });
         return;
     } catch (err) {
+        console.error(err);
         res.status(401).json({ loggedIn: false });
         return;
     }

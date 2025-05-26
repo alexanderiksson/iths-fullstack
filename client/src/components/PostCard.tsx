@@ -2,6 +2,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { FaHeart, FaComment } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import useToggleLike from "../hooks/useToggleLike";
+import type { Comment } from "../types/Post";
 
 interface PostCardProps {
     date: string;
@@ -13,6 +14,7 @@ interface PostCardProps {
     liked: boolean;
     postId: number;
     likesCount: number;
+    comments: Comment[];
 }
 
 export default function PostCard({
@@ -22,6 +24,7 @@ export default function PostCard({
     liked,
     postId,
     likesCount: initialLikesCount,
+    comments,
 }: PostCardProps) {
     const { isLiked, toggleLike, isLiking, likesCount } = useToggleLike(
         postId,
@@ -74,7 +77,7 @@ export default function PostCard({
                         size={20}
                         className="cursor-pointer hover:scale-110 transition-all duration-100"
                     />
-                    <span className="text-sm text-neutral-300">0</span>
+                    <span className="text-sm text-neutral-300">{comments.length}</span>
                 </div>
             </div>
         </div>

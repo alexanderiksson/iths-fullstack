@@ -30,6 +30,6 @@ CREATE TABLE IF NOT EXISTS users_comments (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     post_id INTEGER REFERENCES posts(id),
-    comment TEXT NOT NULL CHECK (char_length(text) < 500),
+    comment TEXT NOT NULL CHECK (char_length(comment) < 500),
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);

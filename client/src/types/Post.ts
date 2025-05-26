@@ -1,3 +1,9 @@
+export interface Comment {
+    user_id: number;
+    comment: string;
+    created: string;
+}
+
 export interface Post {
     id: number;
     text: string;
@@ -5,4 +11,5 @@ export interface Post {
     created: string;
     username: string;
     likes: number[];
+    comments: Comment[];
 }
