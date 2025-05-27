@@ -77,17 +77,32 @@ export const getFeed = async (req: Request, res: Response) => {
 };
 
 export const createPost = async (req: Request, res: Response) => {
-    const user = req.user;
+    const userId = req.user?.id;
     const { text } = req.body;
 
-    if (!text || !user) {
+    if (!text) {
         res.sendStatus(400);
         return;
     }
 
     try {
-        await pool.query("INSERT INTO posts (text, user_id) VALUES ($1, $2)", [text, user.id]);
+        await pool.query("INSERT INTO posts (text, user_id) VALUES ($1, $2)", [text, userId]);
         res.sendStatus(201);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+};
+
+export const deletePost = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const postId = req.params.id;
+
+    try {
+        await pool.query("DELETE FROM posts WHERE id = $1 AND user_id = $2", [postId, userId]);
+        res.sendStatus(200);
         return;
     } catch (err) {
         console.error(err);
