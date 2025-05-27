@@ -6,7 +6,7 @@
         "build": "npm run build:frontend && npm run build:backend",
         "build:frontend": "npm --prefix client run build",
         "build:backend": "npm --prefix server run build",
-        "start": "node server/dist/index.js"
+        "start": "npm --prefix server run start"
     },
     "keywords": [],
     "author": "",
