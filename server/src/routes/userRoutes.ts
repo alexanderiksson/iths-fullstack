@@ -9,5 +9,7 @@ router.get("/user/:user", auth, userController.getUser);
 router.get("/search-users", auth, userController.searchUsers);
 router.post("/follow/:id", auth, userController.followUser);
 router.delete("/follow/:id", auth, userController.unfollowUser);
+router.get("/followers/:id", auth, userController.getFollowers);
+router.get("/follows/:id", auth, userController.getFollows);
 
 export default router;

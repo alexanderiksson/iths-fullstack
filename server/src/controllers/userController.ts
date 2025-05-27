@@ -144,3 +144,44 @@ export const unfollowUser = async (req: Request, res: Response) => {
         return;
     }
 };
+
+export const getFollowers = async (req: Request, res: Response) => {
+    const userId = req.params.id;
+
+    try {
+        const followers = await pool.query(
+            `SELECT users_follows.user_id, users.username
+             FROM users_follows
+             JOIN users ON users.id = users_follows.user_id
+             WHERE users_follows.follows = $1`,
+            [userId]
+        );
+
+        res.json(followers.rows);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+};
+
+export const getFollows = async (req: Request, res: Response) => {
+    const userId = req.params.id;
+
+    try {
+        const follows = await pool.query(
+            `SELECT users_follows.follows AS user_id, users.username
+             FROM users_follows
+             JOIN users ON users.id = users_follows.follows
+             WHERE users_follows.user_id = $1`,
+            [userId]
+        );
+        res.json(follows.rows);
+        return;
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+    }
+};
