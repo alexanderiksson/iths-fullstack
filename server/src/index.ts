@@ -24,7 +24,10 @@ app.use("/api/posts", postRoutes);
 app.use("/dev", devRoutes);
 
 // Frontend
-app.use(express.static(path.join(path.resolve(), "../public")));
+app.use(express.static(path.join(__dirname, "../../client/dist")));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../../client/dist", "index.html"));
+});
 
 // Start server
 app.listen(port, () => {

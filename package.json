@@ -1,12 +1,15 @@
 {
-  "name": "iths-fullstack",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+    "name": "iths-fullstack",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "build": "npm run build:frontend && npm run build:backend",
+        "build:frontend": "npm --prefix client run build",
+        "build:backend": "npm --prefix server run build",
+        "start": "node server/dist/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": ""
 }
