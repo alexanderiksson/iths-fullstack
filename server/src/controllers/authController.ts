@@ -72,7 +72,7 @@ export const login = async (req: Request, res: Response) => {
         const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
 
         if (user.rows.length === 0) {
-            res.status(401).send("Incorrect username");
+            res.sendStatus(401);
             return;
         }
 
@@ -80,7 +80,7 @@ export const login = async (req: Request, res: Response) => {
         const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
         if (!passwordMatch) {
-            res.status(401).send("Incorrect password");
+            res.sendStatus(401);
             return;
         }
 
@@ -94,7 +94,7 @@ export const login = async (req: Request, res: Response) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: process.env.NODE_ENV === "dev" ? false : true,
         });
 
         res.sendStatus(200);
@@ -109,7 +109,7 @@ export const login = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
     res.clearCookie("token", {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === "dev" ? false : true,
     });
 
     res.sendStatus(200);
