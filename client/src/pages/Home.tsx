@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import type { Post } from "../types/Post";
 import type { User } from "../types/User";
@@ -15,13 +14,6 @@ export default function Home() {
 
     return (
         <div className="content">
-            <Link
-                to="/new-post"
-                className="inline-flex bg-primary py-2 px-6 rounded-lg text-white cursor-pointer mb-12"
-            >
-                Nytt inlägg
-            </Link>
-
             {!feed || feed.length === 0 ? (
                 <p className="text-neutral-500">Ditt flöde är tomt</p>
             ) : (

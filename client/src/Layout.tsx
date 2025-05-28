@@ -1,13 +1,13 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Navigation from "./components/Navigation";
 
 export default function Layout() {
     return (
         <>
-            <Navbar />
-            <main className="pt-24 flex-1">
+            <main className="pt-24 pb-12 lg:ml-64 relative">
                 <Outlet />
             </main>
+            <Navigation />
         </>
     );
 }

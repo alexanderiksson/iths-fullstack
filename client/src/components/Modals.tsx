@@ -19,6 +19,7 @@ interface CommentModalProps extends ModalProps {
 
 interface FollowlistModalProps extends ModalProps {
     fetchUrl: string;
+    label: string;
 }
 
 export function CommentsModal({ isOpen, onClose, comments, postId }: CommentModalProps) {
@@ -60,13 +61,16 @@ export function CommentsModal({ isOpen, onClose, comments, postId }: CommentModa
     };
 
     return (
-        <div className="w-screen h-screen fixed flex justify-center items-center top-0 left-0 bg-black/80 z-20">
-            <div className="max-w-2xl w-full min-h-40 max-h-screen bg-background rounded-lg flex flex-col shadow-lg p-4 gap-4">
-                <div onClick={onClose} className="cursor-pointer w-fit">
-                    <IoMdClose size={20} />
+        <div className="modal-overlay">
+            <div className="max-w-2xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col shadow-lg p-4 gap-4">
+                <div className="flex justify-center items-center relative pb-2">
+                    <div onClick={onClose} className="cursor-pointer w-fit absolute left-0">
+                        <IoMdClose size={20} />
+                    </div>
+                    <span className="mx-auto">Kommentarer</span>
                 </div>
                 {commentsState?.length === 0 ? (
-                    <p>Inga kommentarer</p>
+                    <p className="text-neutral-500">Inga kommentarer</p>
                 ) : (
                     <div className="flex flex-col divide-y divide-white/10 overflow-y-auto">
                         {[...commentsState]
@@ -103,7 +107,7 @@ export function CommentsModal({ isOpen, onClose, comments, postId }: CommentModa
                         <input
                             type="text"
                             placeholder="Kommentera"
-                            className="w-full p-2 bg-neutral-900 border border-white/5 rounded-lg"
+                            className="w-full p-2 border border-white/10 rounded-lg"
                             required
                             onChange={(e) => setComment(e.target.value)}
                             value={comment}
@@ -122,7 +126,7 @@ export function CommentsModal({ isOpen, onClose, comments, postId }: CommentModa
     );
 }
 
-export function FollowlistModal({ isOpen, onClose, fetchUrl }: FollowlistModalProps) {
+export function FollowlistModal({ isOpen, onClose, fetchUrl, label }: FollowlistModalProps) {
     const { data, loading, error } = useFetch(fetchUrl);
 
     if (!isOpen) return null;
@@ -132,10 +136,13 @@ export function FollowlistModal({ isOpen, onClose, fetchUrl }: FollowlistModalPr
     if (!Array.isArray(data)) return null;
 
     return (
-        <div className="w-screen h-screen fixed flex justify-center items-center top-0 left-0 bg-black/80 z-20">
-            <div className="max-w-2xl w-full min-h-40 max-h-screen bg-background rounded-lg flex flex-col shadow-lg p-4 gap-4">
-                <div onClick={onClose} className="cursor-pointer w-fit">
-                    <IoMdClose size={20} />
+        <div className="modal-overlay">
+            <div className="max-w-2xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col shadow-lg p-4 gap-4">
+                <div className="flex justify-center items-center relative pb-2">
+                    <div onClick={onClose} className="cursor-pointer w-fit absolute left-0">
+                        <IoMdClose size={20} />
+                    </div>
+                    <span className="mx-auto">{label}</span>
                 </div>
                 <div className="flex flex-col divide-y divide-white/10">
                     {data.map((user, index) => (
@@ -155,6 +162,92 @@ export function FollowlistModal({ isOpen, onClose, fetchUrl }: FollowlistModalPr
                         </div>
                     ))}
                 </div>
+            </div>
+        </div>
+    );
+}
+
+export function NewpostModal({ isOpen, onClose }: ModalProps) {
+    const [text, setText] = useState("");
+    const [msg, setMsg] = useState<string | null>(null);
+    const [msgStyle, setMsgStyle] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handlePost = async () => {
+        if (!text) {
+            setMsgStyle("text-error");
+            setMsg("Ditt inlägg får inte vara tomt.");
+            return;
+        }
+
+        setLoading(true);
+        setMsg(null);
+
+        try {
+            const res = await axios.post(
+                "/api/posts/new-post",
+                { text },
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (res.status === 201) {
+                setMsgStyle("text-success");
+                setMsg("Inlägg publicerat!");
+                setText("");
+            }
+        } catch (err) {
+            console.error(err);
+            setMsgStyle("text-error");
+            setMsg("Något gick fel");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-overlay">
+            <div className="max-w-2xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col shadow-lg p-4 gap-4">
+                <div className="flex justify-center items-center relative pb-6">
+                    <div onClick={onClose} className="cursor-pointer w-fit absolute left-0">
+                        <IoMdClose size={20} />
+                    </div>
+                    <span className="mx-auto">Nytt inlägg</span>
+                </div>
+
+                <div className="flex items-start gap-3">
+                    <img
+                        src="/profileplaceholder.jpg"
+                        width={36}
+                        className="rounded-full mt-1"
+                        alt=""
+                    />
+
+                    <div>
+                        <span>alex</span>
+                        <textarea
+                            rows={2}
+                            className="w-full placeholder:text-neutral-600 focus:outline-none resize-none"
+                            value={text}
+                            onChange={(e) => {
+                                setText(e.target.value);
+                                const textarea = e.target as HTMLTextAreaElement;
+                                textarea.style.height = "auto";
+                                textarea.style.height = textarea.scrollHeight + "px";
+                            }}
+                            placeholder="Skriv ett inlägg"
+                            maxLength={500}
+                            style={{ overflow: "hidden" }}
+                        />
+                    </div>
+                </div>
+                <button className="button" onClick={handlePost}>
+                    {loading ? "Publicerar..." : "Publicera"}
+                </button>
+                {msg && <p className={`mb-4 ${msgStyle}`}>{msg}</p>}
             </div>
         </div>
     );

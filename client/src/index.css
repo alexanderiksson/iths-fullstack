@@ -2,9 +2,10 @@
 @import "tailwindcss";
 
 :root {
-    --primary: #1076d5;
-    --background: #131313;
-    --text: #fff;
+    --primary: #365af2;
+    --background: #09090b;
+    --secondary: #0f0f11;
+    --text: #efefef;
     --error: #d21f1f;
     --success: #129b12;
 }
@@ -12,6 +13,7 @@
 @theme {
     --color-primary: var(--primary);
     --color-background: var(--background);
+    --color-secondary: var(--secondary);
     --color-error: var(--error);
     --color-success: var(--success);
 }
@@ -35,5 +37,13 @@ body,
 }
 
 .active {
-    color: var(--primary);
+    color: white;
+}
+
+.button {
+    @apply inline-flex w-fit bg-primary py-2 px-6 rounded-lg text-white cursor-pointer gap-2 items-center;
+}
+
+.modal-overlay {
+    @apply w-screen h-screen fixed flex justify-center items-center top-0 left-0 bg-black/70 z-20;
 }

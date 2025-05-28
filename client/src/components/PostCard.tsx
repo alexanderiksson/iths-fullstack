@@ -44,7 +44,7 @@ export default function PostCard({
                 comments={comments}
                 postId={postId}
             />
-            <div className="p-4 border border-white/5 rounded-lg flex flex-col gap-4 bg-neutral-800/50">
+            <div className="p-4 border border-white/5 bg-secondary rounded-lg flex flex-col gap-4">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <Link
@@ -73,7 +73,7 @@ export default function PostCard({
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-1 cursor-pointer" onClick={toggleLike}>
                         <FaHeart
-                            color={isLiked ? "red" : "gray"}
+                            color={isLiked ? "#ff3040" : "#848484"}
                             size={20}
                             className={`hover:scale-110 transition-all duration-100 ${
                                 isLiking ? "opacity-50 pointer-events-none" : ""
@@ -87,7 +87,7 @@ export default function PostCard({
                         onClick={() => setIsOpen(true)}
                     >
                         <FaComment
-                            color="grey"
+                            color="#848484"
                             size={20}
                             className="cursor-pointer hover:scale-110 transition-all duration-100"
                         />

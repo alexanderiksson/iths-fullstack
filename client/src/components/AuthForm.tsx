@@ -24,22 +24,24 @@ export default function AuthForm({
             <div>
                 <label className="block text-sm font-medium text-neutral-300">Användarnamn</label>
                 <input
-                    className="mt-1 bg-neutral-900/20 w-full px-4 py-2 border border-neutral-500 rounded-lg shadow-sm focus:ring focus:ring-blue-200"
+                    className="mt-1 bg-neutral-900/20 w-full px-4 py-2 border border-white/10 rounded-lg shadow-sm focus:ring focus:ring-blue-200"
                     type="text"
                     value={username}
                     onChange={onUsernameChange}
                     required
+                    autoComplete="username"
                 />
             </div>
 
             <div>
                 <label className="block text-sm font-medium text-neutral-300">Lösenord</label>
                 <input
-                    className="mt-1 bg-neutral-900/20 w-full px-4 py-2 border border-neutral-500 rounded-lg shadow-sm focus:ring focus:ring-blue-200"
+                    className="mt-1 bg-neutral-900/20 w-full px-4 py-2 border border-white/10 rounded-lg shadow-sm focus:ring focus:ring-blue-200"
                     type="password"
                     value={password}
                     onChange={onPasswordChange}
                     required
+                    autoComplete="current-password"
                 />
             </div>
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import type { User } from "../types/User";
 import Loader from "../components/Loader";
+import { IoSearch } from "react-icons/io5";
 
 export default function Search() {
     const [query, setQuery] = useState("");
@@ -29,7 +30,8 @@ export default function Search() {
             <h1 className="text-2xl mb-4">Sök</h1>
 
             <div>
-                <div className="w-full flex">
+                <div className="w-full flex relative">
+                    <IoSearch className="absolute left-4 top-1/2 -translate-y-1/2" color="gray" />
                     <input
                         type="text"
                         placeholder="Sök"
@@ -38,7 +40,7 @@ export default function Search() {
                             setQuery(e.target.value);
                             handleSearch();
                         }}
-                        className="bg-neutral-800/50 px-4 py-2 border border-neutral-500/10 rounded-lg shadow-sm placeholder:text-sm flex-1"
+                        className="bg-neutral-800/50 px-10 py-2 border border-neutral-500/10 rounded-lg shadow-sm placeholder:text-sm flex-1 "
                     />
                 </div>
                 <ul className="flex flex-col mt-4 divide-y divide-neutral-700">

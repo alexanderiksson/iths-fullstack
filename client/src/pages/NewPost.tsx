@@ -46,7 +46,7 @@ export default function NewPost() {
 
             <textarea
                 rows={8}
-                className="border border-white/10 rounded-lg w-xl max-w-full p-2 mb-4 bg-neutral-800/70 placeholder:text-neutral-500"
+                className="border border-white/10 rounded-lg w-xl max-w-full p-2 mb-4 bg-secondary placeholder:text-neutral-500"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Skriv ett inlägg"

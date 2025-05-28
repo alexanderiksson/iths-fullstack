@@ -41,7 +41,7 @@ export default function Register() {
 
     return (
         <div className="flex items-center justify-center h-screen">
-            <div className="w-full max-w-sm p-8 bg-neutral-800 rounded-xl shadow-lg flex flex-col gap-8">
+            <div className="w-full max-w-sm p-8 bg-secondary rounded-xl flex flex-col gap-8 border border-white/10">
                 <h2 className="text-2xl font-semibold text-center">Skapa konto</h2>
 
                 <AuthForm
@@ -55,7 +55,7 @@ export default function Register() {
                     loading={loading}
                 />
 
-                <p className="text-sm">
+                <p className="text-sm text-center">
                     Har du redan ett konto?{" "}
                     <Link to="/login" className="text-blue-500 underline">
                         Logga in
