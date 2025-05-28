@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import pool from "../db/index.js";
+import pool from "../db";
 
 export const getCurrentUser = async (req: Request, res: Response) => {
     const user = req.user;

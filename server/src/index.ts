@@ -1,13 +1,12 @@
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import userRoutes from "./routes/userRoutes.js";
-import postRoutes from "./routes/postRoutes.js";
-import devRoutes from "./routes/devRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes";
+import postRoutes from "./routes/postRoutes";
+import devRoutes from "./routes/devRoutes";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
 const port = 3000;
@@ -25,9 +24,6 @@ app.use("/api/posts", postRoutes);
 app.use("/dev", devRoutes);
 
 // Frontend
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 // Start server
