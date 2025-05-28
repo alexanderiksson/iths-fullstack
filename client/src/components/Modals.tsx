@@ -221,15 +221,15 @@ export function NewpostModal({ isOpen, onClose }: ModalProps) {
                 <div className="flex items-start gap-3">
                     <img
                         src="/profileplaceholder.jpg"
-                        width={36}
+                        width={32}
                         className="rounded-full mt-1"
                         alt=""
                     />
 
-                    <div>
+                    <div className="w-full">
                         <span>alex</span>
                         <textarea
-                            rows={2}
+                            rows={3}
                             className="w-full placeholder:text-neutral-600 focus:outline-none resize-none"
                             value={text}
                             onChange={(e) => {

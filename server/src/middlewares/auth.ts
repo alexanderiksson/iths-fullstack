@@ -22,12 +22,13 @@ function isAuthPayload(payload: JwtPayload): payload is AuthPayload {
 export default function auth(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies?.token;
 
-    if (!token) {
+    if (!token || typeof token !== "string") {
         res.status(401).json({ loggedIn: false });
         return;
     }
 
     const jwtSecret = process.env.JWT_SECRET;
+
     if (!jwtSecret) {
         res.status(500).json({ error: "JWT secret not configured" });
         return;
@@ -42,11 +43,11 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
             return;
         }
 
+        req.user = undefined;
         res.status(401).json({ loggedIn: false });
-        return;
     } catch (err) {
+        req.user = undefined;
         console.error(err);
         res.status(401).json({ loggedIn: false });
-        return;
     }
 }

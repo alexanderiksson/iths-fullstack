@@ -3,6 +3,12 @@ import pool from "../db";
 
 export const getCurrentUser = async (req: Request, res: Response) => {
     const user = req.user;
+
+    if (!user) {
+        res.sendStatus(401);
+        return;
+    }
+
     res.json({ id: user?.id, username: user?.username });
 };
 
@@ -11,6 +17,11 @@ export const getUser = async (req: Request, res: Response) => {
 
     try {
         const userInfo = await pool.query("SELECT id, username FROM users WHERE id = $1", [user]);
+
+        if (userInfo.rows.length === 0) {
+            res.sendStatus(404);
+            return;
+        }
 
         const followers = await pool.query("SELECT * FROM users_follows WHERE follows = $1", [
             user,
@@ -39,15 +50,18 @@ export const getUser = async (req: Request, res: Response) => {
             comments = commentsResult.rows;
         }
 
-        const userIds = comments.map((comment) => comment.user_id);
-        const commentUsernamesResult = await pool.query(
-            "SELECT id, username FROM users WHERE id = ANY($1::int[])",
-            [userIds]
-        );
+        const userIds = [...new Set(comments.map((comment) => comment.user_id))];
         const commentUsernamesMap = new Map<number, string>();
-        commentUsernamesResult.rows.forEach((row) => {
-            commentUsernamesMap.set(row.id, row.username);
-        });
+
+        if (userIds.length > 0) {
+            const commentUsernamesResult = await pool.query(
+                "SELECT id, username FROM users WHERE id = ANY($1::int[])",
+                [userIds]
+            );
+            commentUsernamesResult.rows.forEach((row) => {
+                commentUsernamesMap.set(row.id, row.username);
+            });
+        }
 
         const allPosts = posts.rows.map((post) => ({
             ...post,
@@ -62,11 +76,6 @@ export const getUser = async (req: Request, res: Response) => {
                 })),
         }));
 
-        if (userInfo.rows.length === 0) {
-            res.sendStatus(404);
-            return;
-        }
-
         const data = {
             id: userInfo.rows[0].id,
             username: userInfo.rows[0].username,
@@ -79,7 +88,6 @@ export const getUser = async (req: Request, res: Response) => {
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -96,17 +104,20 @@ export const searchUsers = async (req: Request, res: Response) => {
             `%${query}%`,
         ]);
         res.json(result.rows);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
 export const followUser = async (req: Request, res: Response) => {
     const followerId = req.user?.id;
     const followingId = req.params.id;
+
+    if (!followerId) {
+        res.sendStatus(401);
+        return;
+    }
 
     if (Number(followerId) === Number(followingId)) {
         res.status(400).send("Kan inte följa dig själv");
@@ -119,11 +130,9 @@ export const followUser = async (req: Request, res: Response) => {
             [followerId, followingId]
         );
         res.sendStatus(200);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -131,17 +140,20 @@ export const unfollowUser = async (req: Request, res: Response) => {
     const followerId = req.user?.id;
     const followingId = req.params.id;
 
+    if (!followerId) {
+        res.sendStatus(401);
+        return;
+    }
+
     try {
         await pool.query("DELETE FROM users_follows WHERE user_id = $1 AND follows= $2", [
             followerId,
             followingId,
         ]);
         res.sendStatus(200);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -158,11 +170,9 @@ export const getFollowers = async (req: Request, res: Response) => {
         );
 
         res.json(followers.rows);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -178,10 +188,8 @@ export const getFollows = async (req: Request, res: Response) => {
             [userId]
         );
         res.json(follows.rows);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };

@@ -13,7 +13,13 @@ export const register = async (req: Request, res: Response) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        res.status(400).send("Användarnamn & lösenord är obligatoriskt");
+        res.sendStatus(400);
+        return;
+    }
+
+    if (!jwtSecret) {
+        console.error("JWT_SECRET saknas");
+        res.sendStatus(500);
         return;
     }
 
@@ -34,29 +40,22 @@ export const register = async (req: Request, res: Response) => {
         const hash = await bcrypt.hash(password, 10);
 
         const result = await pool.query(
-            "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id",
+            "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username",
             [username, hash]
         );
 
-        if (!jwtSecret) {
-            console.error("JWT_SECRET is not defined");
-            res.sendStatus(500);
-            return;
-        }
-
-        const token = jwt.sign({ username, id: result.rows[0].id }, jwtSecret, { expiresIn: "1h" });
+        const token = jwt.sign({ username, id: result.rows[0].id }, jwtSecret as string);
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: process.env.NODE_ENV !== "dev",
+            sameSite: "strict",
         });
 
-        res.sendStatus(201);
-        return;
+        res.status(201).json({ id: result.rows[0].id, username: result.rows[0].username });
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -65,6 +64,12 @@ export const login = async (req: Request, res: Response) => {
 
     if (!username || !password) {
         res.sendStatus(400);
+        return;
+    }
+
+    if (!jwtSecret) {
+        console.error("JWT_SECRET saknas");
+        res.sendStatus(500);
         return;
     }
 
@@ -84,32 +89,26 @@ export const login = async (req: Request, res: Response) => {
             return;
         }
 
-        if (!jwtSecret) {
-            console.error("JWT_SECRET is not defined");
-            res.sendStatus(500);
-            return;
-        }
-
-        const token = jwt.sign({ username, id: user.rows[0].id }, jwtSecret, { expiresIn: "1h" });
+        const token = jwt.sign({ username, id: user.rows[0].id }, jwtSecret as string);
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "dev" ? false : true,
+            secure: process.env.NODE_ENV !== "dev",
+            sameSite: "strict",
         });
 
-        res.sendStatus(200);
-        return;
+        res.status(200).json({ id: user.rows[0].id, username: user.rows[0].username });
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
 export const logout = async (req: Request, res: Response) => {
     res.clearCookie("token", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "dev" ? false : true,
+        secure: process.env.NODE_ENV !== "dev",
+        sameSite: "strict",
     });
 
     res.sendStatus(200);

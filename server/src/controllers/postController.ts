@@ -2,9 +2,14 @@ import { Request, Response } from "express";
 import pool from "../db";
 
 export const getFeed = async (req: Request, res: Response) => {
-    try {
-        const userId = req.user?.id;
+    const userId = req.user?.id;
 
+    if (!userId) {
+        res.sendStatus(401);
+        return;
+    }
+
+    try {
         const followsResult = await pool.query(
             "SELECT follows FROM users_follows WHERE user_id = $1",
             [userId]
@@ -44,15 +49,18 @@ export const getFeed = async (req: Request, res: Response) => {
             comments = commentsResult.rows;
         }
 
-        const userIds = comments.map((comment) => comment.user_id);
-        const commentUsernamesResult = await pool.query(
-            "SELECT id, username FROM users WHERE id = ANY($1::int[])",
-            [userIds]
-        );
+        const userIds = [...new Set(comments.map((comment) => comment.user_id))];
         const commentUsernamesMap = new Map<number, string>();
-        commentUsernamesResult.rows.forEach((row) => {
-            commentUsernamesMap.set(row.id, row.username);
-        });
+
+        if (userIds.length > 0) {
+            const commentUsernamesResult = await pool.query(
+                "SELECT id, username FROM users WHERE id = ANY($1::int[])",
+                [userIds]
+            );
+            commentUsernamesResult.rows.forEach((row) => {
+                commentUsernamesMap.set(row.id, row.username);
+            });
+        }
 
         const allPosts = posts.rows.map((post) => ({
             ...post,
@@ -68,17 +76,20 @@ export const getFeed = async (req: Request, res: Response) => {
         }));
 
         res.json(allPosts);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
 export const createPost = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const { text } = req.body;
+
+    if (!userId) {
+        res.sendStatus(401);
+        return;
+    }
 
     if (!text) {
         res.sendStatus(400);
@@ -88,11 +99,9 @@ export const createPost = async (req: Request, res: Response) => {
     try {
         await pool.query("INSERT INTO posts (text, user_id) VALUES ($1, $2)", [text, userId]);
         res.sendStatus(201);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -100,14 +109,17 @@ export const deletePost = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const postId = req.params.id;
 
+    if (!userId) {
+        res.sendStatus(401);
+        return;
+    }
+
     try {
         await pool.query("DELETE FROM posts WHERE id = $1 AND user_id = $2", [postId, userId]);
         res.sendStatus(200);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -115,17 +127,20 @@ export const likePost = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const postId = req.params.id;
 
+    if (!userId) {
+        res.sendStatus(401);
+        return;
+    }
+
     try {
         await pool.query(
             "INSERT INTO users_likes (user_id, post_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
             [userId, postId]
         );
         res.sendStatus(200);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -133,17 +148,20 @@ export const unlikePost = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const postId = req.params.id;
 
+    if (!userId) {
+        res.sendStatus(401);
+        return;
+    }
+
     try {
         await pool.query("DELETE FROM users_likes WHERE user_id = $1 AND post_id = $2", [
             userId,
             postId,
         ]);
         res.sendStatus(200);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -151,6 +169,11 @@ export const comment = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const postId = req.params.id;
     const { comment } = req.body;
+
+    if (!userId) {
+        res.sendStatus(401);
+        return;
+    }
 
     if (!comment) {
         res.sendStatus(400);
@@ -163,11 +186,9 @@ export const comment = async (req: Request, res: Response) => {
             [userId, postId, comment]
         );
         res.sendStatus(200);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
 
@@ -175,16 +196,19 @@ export const deleteComment = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const commentId = req.params.id;
 
+    if (!userId) {
+        res.sendStatus(401);
+        return;
+    }
+
     try {
         await pool.query("DELETE FROM users_comments WHERE id = $1 AND user_id = $2", [
             commentId,
             userId,
         ]);
         res.sendStatus(200);
-        return;
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
-        return;
     }
 };
