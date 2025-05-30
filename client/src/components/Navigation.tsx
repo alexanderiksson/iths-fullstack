@@ -5,13 +5,21 @@ import { IoIosAddCircle } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
 import { FaUser } from "react-icons/fa6";
 import { NewpostModal } from "./Modals";
+import useFetch from "../hooks/useFetch";
+import type { User } from "../types/User";
 
 export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
 
+    const { data: user } = useFetch<User>("/api/users/me");
+
     return (
         <>
-            <NewpostModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+            <NewpostModal
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                username={user?.username}
+            />
 
             <div className="w-64 bg-secondary hidden lg:flex flex-col gap-16 fixed h-screen px-4 py-8 border border-white/10">
                 <div>

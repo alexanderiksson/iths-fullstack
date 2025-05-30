@@ -24,6 +24,10 @@ interface FollowlistModalProps extends ModalProps {
     label: string;
 }
 
+interface NewpostModalProps extends ModalProps {
+    username: string | undefined;
+}
+
 export function CommentsModal({
     isOpen,
     onClose,
@@ -182,7 +186,7 @@ export function FollowlistModal({ isOpen, onClose, fetchUrl, label }: Followlist
     );
 }
 
-export function NewpostModal({ isOpen, onClose }: ModalProps) {
+export function NewpostModal({ isOpen, onClose, username }: NewpostModalProps) {
     const [text, setText] = useState("");
     const [msg, setMsg] = useState<string | null>(null);
     const [msgStyle, setMsgStyle] = useState("");
@@ -242,7 +246,7 @@ export function NewpostModal({ isOpen, onClose }: ModalProps) {
                     />
 
                     <div className="w-full">
-                        <span>alex</span>
+                        <span>{username}</span>
                         <textarea
                             rows={3}
                             className="w-full placeholder:text-neutral-600 focus:outline-none resize-none"
