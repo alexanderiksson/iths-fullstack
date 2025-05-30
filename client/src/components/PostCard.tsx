@@ -17,6 +17,7 @@ interface PostCardProps {
     postId: number;
     likesCount: number;
     comments?: Comment[];
+    currentUserId: number;
 }
 
 export default function PostCard({
@@ -27,6 +28,7 @@ export default function PostCard({
     postId,
     likesCount: initialLikesCount,
     comments,
+    currentUserId,
 }: PostCardProps) {
     const { isLiked, toggleLike, isLiking, likesCount } = useToggleLike(
         postId,
@@ -43,6 +45,7 @@ export default function PostCard({
                 onClose={() => setIsOpen(false)}
                 comments={comments}
                 postId={postId}
+                currentUserId={currentUserId}
             />
             <div className="p-4 border border-white/5 bg-secondary rounded-lg flex flex-col gap-4">
                 <div className="flex justify-between items-center">
@@ -63,9 +66,11 @@ export default function PostCard({
                             {new Date(date).toLocaleDateString()}
                         </span>
                     </div>
-                    <button className="cursor-pointer ml-auto">
-                        <BsThreeDots />
-                    </button>
+                    {currentUserId === user.id && (
+                        <button className="cursor-pointer ml-auto">
+                            <BsThreeDots />
+                        </button>
+                    )}
                 </div>
 
                 <p className="mb-2">{text}</p>

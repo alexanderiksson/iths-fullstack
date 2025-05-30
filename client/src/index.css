@@ -47,3 +47,7 @@ body,
 .modal-overlay {
     @apply w-screen h-screen fixed flex justify-center items-center top-0 left-0 bg-black/70 z-20;
 }
+
+.modal {
+    @apply max-w-3xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col shadow-lg p-4 gap-4;
+}

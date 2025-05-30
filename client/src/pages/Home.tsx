@@ -31,6 +31,7 @@ export default function Home() {
                                     postId={post.id}
                                     likesCount={post.likes?.length ?? 0}
                                     comments={post.comments}
+                                    currentUserId={user.id}
                                 />
                             ))}
                     </div>

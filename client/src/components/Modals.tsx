@@ -6,6 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import useFetch from "../hooks/useFetch";
 import Loader from "./Loader";
 import Error from "./Error";
+import { BsThreeDots } from "react-icons/bs";
 
 interface ModalProps {
     isOpen: boolean;
@@ -15,6 +16,7 @@ interface ModalProps {
 interface CommentModalProps extends ModalProps {
     comments: Comment[] | undefined;
     postId: number;
+    currentUserId: number;
 }
 
 interface FollowlistModalProps extends ModalProps {
@@ -22,7 +24,13 @@ interface FollowlistModalProps extends ModalProps {
     label: string;
 }
 
-export function CommentsModal({ isOpen, onClose, comments, postId }: CommentModalProps) {
+export function CommentsModal({
+    isOpen,
+    onClose,
+    comments,
+    postId,
+    currentUserId,
+}: CommentModalProps) {
     const [commentsState, setCommentsState] = useState<Comment[]>([...(comments ?? [])]);
     const [comment, setComment] = useState("");
 
@@ -62,7 +70,7 @@ export function CommentsModal({ isOpen, onClose, comments, postId }: CommentModa
 
     return (
         <div className="modal-overlay">
-            <div className="max-w-2xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col shadow-lg p-4 gap-4">
+            <div className="modal">
                 <div className="flex justify-center items-center relative pb-2">
                     <div onClick={onClose} className="cursor-pointer w-fit absolute left-0">
                         <IoMdClose size={20} />
@@ -93,7 +101,14 @@ export function CommentsModal({ isOpen, onClose, comments, postId }: CommentModa
                                             />
                                             {comment.username}
                                         </Link>
+
                                         <span className="break-all">{comment.comment}</span>
+
+                                        {currentUserId === comment.user_id && (
+                                            <button className="cursor-pointer ml-auto">
+                                                <BsThreeDots />
+                                            </button>
+                                        )}
                                     </div>
                                     <span className="text-xs text-neutral-500">
                                         {new Date(comment.created).toLocaleDateString()}
@@ -137,7 +152,7 @@ export function FollowlistModal({ isOpen, onClose, fetchUrl, label }: Followlist
 
     return (
         <div className="modal-overlay">
-            <div className="max-w-2xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col shadow-lg p-4 gap-4">
+            <div className="modal">
                 <div className="flex justify-center items-center relative pb-2">
                     <div onClick={onClose} className="cursor-pointer w-fit absolute left-0">
                         <IoMdClose size={20} />
@@ -210,7 +225,7 @@ export function NewpostModal({ isOpen, onClose }: ModalProps) {
 
     return (
         <div className="modal-overlay">
-            <div className="max-w-2xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col shadow-lg p-4 gap-4">
+            <div className="modal">
                 <div className="flex justify-center items-center relative pb-6">
                     <div onClick={onClose} className="cursor-pointer w-fit absolute left-0">
                         <IoMdClose size={20} />
