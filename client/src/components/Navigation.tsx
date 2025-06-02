@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { FaHouse } from "react-icons/fa6";
 import { IoIosAddCircle } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
@@ -21,10 +21,7 @@ export default function Navigation() {
                 username={user?.username}
             />
 
-            <div className="w-64 bg-secondary hidden lg:flex flex-col gap-16 fixed h-screen px-4 py-8 border border-white/10">
-                <div>
-                    <Link to="/">LOGO</Link>
-                </div>
+            <div className="w-64 bg-secondary hidden lg:flex flex-col gap-16 fixed h-screen px-4 py-12 border border-white/10">
                 <nav>
                     <ul className="flex flex-col gap-8 text-lg text-neutral-400/80">
                         <li>

@@ -3,8 +3,9 @@ import { FaHeart, FaComment } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import useToggleLike from "../hooks/useToggleLike";
 import type { Comment } from "../types/Post";
-import { CommentsModal } from "./Modals";
+import { CommentsModal, DeleteModal } from "./Modals";
 import { useState } from "react";
+import axios from "axios";
 
 interface PostCardProps {
     date: string;
@@ -36,17 +37,30 @@ export default function PostCard({
         initialLikesCount
     );
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [commentsIsOpen, setCommentsIsOpen] = useState(false);
+    const [deleteIsOpen, setDeleteIsOpen] = useState(false);
+
+    const handleDelete = async () => {
+        await axios.delete(`/api/posts/post/${postId}`, {
+            withCredentials: true,
+        });
+    };
 
     return (
         <>
             <CommentsModal
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                isOpen={commentsIsOpen}
+                onClose={() => setCommentsIsOpen(false)}
                 comments={comments}
                 postId={postId}
                 currentUserId={currentUserId}
             />
+            <DeleteModal
+                isOpen={deleteIsOpen}
+                onClose={() => setDeleteIsOpen(false)}
+                onDelete={handleDelete}
+            />
+
             <div className="p-4 border border-white/5 bg-secondary rounded-lg flex flex-col gap-4">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
@@ -67,7 +81,10 @@ export default function PostCard({
                         </span>
                     </div>
                     {currentUserId === user.id && (
-                        <button className="cursor-pointer ml-auto">
+                        <button
+                            className="cursor-pointer ml-auto"
+                            onClick={() => setDeleteIsOpen(true)}
+                        >
                             <BsThreeDots />
                         </button>
                     )}
@@ -89,7 +106,7 @@ export default function PostCard({
 
                     <div
                         className="flex items-center gap-1 cursor-pointer"
-                        onClick={() => setIsOpen(true)}
+                        onClick={() => setCommentsIsOpen(true)}
                     >
                         <FaComment
                             color="#848484"

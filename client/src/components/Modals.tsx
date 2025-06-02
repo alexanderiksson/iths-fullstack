@@ -28,6 +28,10 @@ interface NewpostModalProps extends ModalProps {
     username: string | undefined;
 }
 
+interface DeleteModalProps extends ModalProps {
+    onDelete: () => void;
+}
+
 export function CommentsModal({
     isOpen,
     onClose,
@@ -267,6 +271,25 @@ export function NewpostModal({ isOpen, onClose, username }: NewpostModalProps) {
                     {loading ? "Publicerar..." : "Publicera"}
                 </button>
                 {msg && <p className={`mb-4 ${msgStyle}`}>{msg}</p>}
+            </div>
+        </div>
+    );
+}
+
+export function DeleteModal({ isOpen, onClose, onDelete }: DeleteModalProps) {
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-overlay">
+            <div className="bg-secondary w-sm max-w-full rounded-lg">
+                <ul className="text-center divide-y divide-white/10">
+                    <li className="py-3 text-red-500 cursor-pointer" onClick={onDelete}>
+                        Radera
+                    </li>
+                    <li className="py-3 cursor-pointer" onClick={onClose}>
+                        Avbryt
+                    </li>
+                </ul>
             </div>
         </div>
     );

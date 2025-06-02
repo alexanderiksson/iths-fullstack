@@ -49,5 +49,5 @@ body,
 }
 
 .modal {
-    @apply max-w-3xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col shadow-lg p-4 gap-4;
+    @apply max-w-3xl w-full min-h-40 max-h-screen bg-secondary rounded-lg flex flex-col justify-center shadow-lg p-4 gap-4;
 }
