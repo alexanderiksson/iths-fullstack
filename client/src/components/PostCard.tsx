@@ -41,9 +41,15 @@ export default function PostCard({
     const [deleteIsOpen, setDeleteIsOpen] = useState(false);
 
     const handleDelete = async () => {
-        await axios.delete(`/api/posts/post/${postId}`, {
-            withCredentials: true,
-        });
+        try {
+            await axios.delete(`/api/posts/post/${postId}`, {
+                withCredentials: true,
+            });
+            setDeleteIsOpen(false);
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (

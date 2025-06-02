@@ -216,9 +216,9 @@ export function NewpostModal({ isOpen, onClose, username }: NewpostModalProps) {
             );
 
             if (res.status === 201) {
-                setMsgStyle("text-success");
-                setMsg("Inlägg publicerat!");
                 setText("");
+                onClose();
+                window.location.reload();
             }
         } catch (err) {
             console.error(err);
