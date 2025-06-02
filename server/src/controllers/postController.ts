@@ -68,6 +68,7 @@ export const getFeed = async (req: Request, res: Response) => {
             comments: comments
                 .filter((comment) => comment.post_id === post.id)
                 .map((comment) => ({
+                    id: comment.id,
                     user_id: comment.user_id,
                     username: commentUsernamesMap.get(comment.user_id) || null,
                     comment: comment.comment,
@@ -181,11 +182,11 @@ export const comment = async (req: Request, res: Response) => {
     }
 
     try {
-        await pool.query(
-            "INSERT INTO users_comments (user_id, post_id, comment) VALUES ($1, $2, $3)",
+        const result = await pool.query(
+            "INSERT INTO users_comments (user_id, post_id, comment) VALUES ($1, $2, $3) RETURNING id",
             [userId, postId, comment]
         );
-        res.sendStatus(200);
+        res.status(200).json({ id: result.rows[0].id });
     } catch (err) {
         console.error(err);
         res.sendStatus(500);

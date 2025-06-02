@@ -6,11 +6,15 @@ import { IoMdClose } from "react-icons/io";
 import useFetch from "../hooks/useFetch";
 import Loader from "./Loader";
 import Error from "./Error";
-import { BsThreeDots } from "react-icons/bs";
+import CommentCard from "./CommentCard";
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
+}
+
+interface DeleteModalProps extends ModalProps {
+    onDelete: () => void;
 }
 
 interface CommentModalProps extends ModalProps {
@@ -28,8 +32,23 @@ interface NewpostModalProps extends ModalProps {
     username: string | undefined;
 }
 
-interface DeleteModalProps extends ModalProps {
-    onDelete: () => void;
+export function DeleteModal({ isOpen, onClose, onDelete }: DeleteModalProps) {
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-overlay">
+            <div className="bg-secondary w-sm max-w-full rounded-lg">
+                <ul className="text-center divide-y divide-white/10">
+                    <li className="py-3 text-red-500 cursor-pointer" onClick={onDelete}>
+                        Radera
+                    </li>
+                    <li className="py-3 cursor-pointer" onClick={onClose}>
+                        Avbryt
+                    </li>
+                </ul>
+            </div>
+        </div>
+    );
 }
 
 export function CommentsModal({
@@ -52,7 +71,7 @@ export function CommentsModal({
         });
 
         try {
-            await axios.post(
+            const res = await axios.post(
                 `/api/posts/comment/${postId}`,
                 { comment: comment },
                 {
@@ -62,6 +81,7 @@ export function CommentsModal({
 
             setCommentsState([
                 {
+                    id: res.data.id,
                     user_id: currentUser.data.id,
                     username: currentUser.data.username,
                     comment: comment,
@@ -95,33 +115,15 @@ export function CommentsModal({
                                     new Date(b.created).getTime() - new Date(a.created).getTime()
                             )
                             .map((comment, index) => (
-                                <div key={index} className="py-3 flex flex-col gap-2 pr-2">
-                                    <div className="flex gap-2 items-start">
-                                        <Link
-                                            to={`/u/${comment.user_id}`}
-                                            className="text-neutral-300 flex items-center gap-2 shrink-0"
-                                        >
-                                            <img
-                                                src="/profileplaceholder.jpg"
-                                                width={20}
-                                                className="rounded-full"
-                                                alt=""
-                                            />
-                                            {comment.username}
-                                        </Link>
-
-                                        <span className="break-all">{comment.comment}</span>
-
-                                        {currentUserId === comment.user_id && (
-                                            <button className="cursor-pointer ml-auto">
-                                                <BsThreeDots />
-                                            </button>
-                                        )}
-                                    </div>
-                                    <span className="text-xs text-neutral-500">
-                                        {new Date(comment.created).toLocaleDateString()}
-                                    </span>
-                                </div>
+                                <CommentCard
+                                    key={index}
+                                    userId={comment.user_id}
+                                    username={comment.username}
+                                    currentUserId={currentUserId}
+                                    commentId={comment.id}
+                                    comment={comment.comment}
+                                    date={comment.created}
+                                />
                             ))}
                     </div>
                 )}
@@ -271,25 +273,6 @@ export function NewpostModal({ isOpen, onClose, username }: NewpostModalProps) {
                     {loading ? "Publicerar..." : "Publicera"}
                 </button>
                 {msg && <p className={`mb-4 ${msgStyle}`}>{msg}</p>}
-            </div>
-        </div>
-    );
-}
-
-export function DeleteModal({ isOpen, onClose, onDelete }: DeleteModalProps) {
-    if (!isOpen) return null;
-
-    return (
-        <div className="modal-overlay">
-            <div className="bg-secondary w-sm max-w-full rounded-lg">
-                <ul className="text-center divide-y divide-white/10">
-                    <li className="py-3 text-red-500 cursor-pointer" onClick={onDelete}>
-                        Radera
-                    </li>
-                    <li className="py-3 cursor-pointer" onClick={onClose}>
-                        Avbryt
-                    </li>
-                </ul>
             </div>
         </div>
     );

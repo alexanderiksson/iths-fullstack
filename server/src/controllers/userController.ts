@@ -69,6 +69,7 @@ export const getUser = async (req: Request, res: Response) => {
             comments: comments
                 .filter((comment) => comment.post_id === post.id)
                 .map((comment) => ({
+                    id: comment.id,
                     user_id: comment.user_id,
                     username: commentUsernamesMap.get(comment.user_id) || null,
                     comment: comment.comment,
