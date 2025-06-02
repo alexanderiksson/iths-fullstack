@@ -21,19 +21,25 @@ export default function Home() {
                     <p className="mb-2 text-lg">Ditt flöde</p>
                     <div className="flex flex-col gap-4">
                         {Array.isArray(feed) &&
-                            feed.map((post, index) => (
-                                <PostCard
-                                    key={index}
-                                    date={post.created}
-                                    text={post.text}
-                                    user={{ id: post.user_id, username: post.username }}
-                                    liked={post.likes?.includes(user.id) ?? false}
-                                    postId={post.id}
-                                    likesCount={post.likes?.length ?? 0}
-                                    comments={post.comments}
-                                    currentUserId={user.id}
-                                />
-                            ))}
+                            [...feed]
+                                .sort(
+                                    (a, b) =>
+                                        new Date(b.created).getTime() -
+                                        new Date(a.created).getTime()
+                                )
+                                .map((post, index) => (
+                                    <PostCard
+                                        key={index}
+                                        date={post.created}
+                                        text={post.text}
+                                        user={{ id: post.user_id, username: post.username }}
+                                        liked={post.likes?.includes(user.id) ?? false}
+                                        postId={post.id}
+                                        likesCount={post.likes?.length ?? 0}
+                                        comments={post.comments}
+                                        currentUserId={user.id}
+                                    />
+                                ))}
                     </div>
                 </>
             )}

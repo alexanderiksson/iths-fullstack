@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
-import devRoutes from "./routes/devRoutes";
 import authRoutes from "./routes/authRoutes";
 
 const app = express();
@@ -20,8 +19,6 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
-
-app.use("/dev", devRoutes);
 
 // Frontend
 app.use(express.static(path.join(__dirname, "../../client/dist")));
