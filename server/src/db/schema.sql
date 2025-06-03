@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS posts (
     id SERIAL PRIMARY KEY,
-    text TEXT NOT NULL CHECK (char_length(text) < 500),
+    text VARCHAR(500) NOT NULL,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -30,6 +30,6 @@ CREATE TABLE IF NOT EXISTS users_comments (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
-    comment TEXT NOT NULL CHECK (char_length(comment) < 500),
+    comment VARCHAR(500) NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
