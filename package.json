@@ -4,8 +4,8 @@
     "main": "index.js",
     "scripts": {
         "build": "npm run build:frontend && npm run build:backend",
-        "build:frontend": "npm --prefix client run build",
-        "build:backend": "npm --prefix server run build",
+        "build:frontend": "npm --prefix client install && npm --prefix client run build",
+        "build:backend": "npm --prefix server install && npm --prefix server run build",
         "start": "npm --prefix server run start"
     },
     "keywords": [],
