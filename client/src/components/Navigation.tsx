@@ -8,6 +8,35 @@ import { NewpostModal } from "./Modals";
 import useFetch from "../hooks/useFetch";
 import type { User } from "../types/User";
 
+const MobileNav = ({ onOpen }: { onOpen: () => void }) => {
+    return (
+        <nav className="fixed bottom-0 w-full py-4 bg-secondary/80 backdrop-blur-lg border-t border-white/5 flex lg:hidden">
+            <ul className="flex justify-evenly w-full text-neutral-400/80">
+                <li>
+                    <NavLink to="/">
+                        <FaHouse size={22} />
+                    </NavLink>
+                </li>
+                <li>
+                    <span onClick={onOpen} className="cursor-pointer">
+                        <IoIosAddCircle size={24} />
+                    </span>
+                </li>
+                <li>
+                    <NavLink to="/search">
+                        <IoSearch size={24} />
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/profile">
+                        <FaUser size={22} />
+                    </NavLink>
+                </li>
+            </ul>
+        </nav>
+    );
+};
+
 export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -59,6 +88,8 @@ export default function Navigation() {
                     </ul>
                 </nav>
             </div>
+
+            <MobileNav onOpen={() => setIsOpen(true)} />
         </>
     );
 }

@@ -37,7 +37,7 @@ export function DeleteModal({ isOpen, onClose, onDelete }: DeleteModalProps) {
 
     return (
         <div className="modal-overlay">
-            <div className="bg-secondary w-sm max-w-full rounded-lg">
+            <div className="bg-secondary w-sm max-w-[90%] rounded-lg">
                 <ul className="text-center divide-y divide-white/10">
                     <li className="py-3 text-red-500 cursor-pointer" onClick={onDelete}>
                         Radera

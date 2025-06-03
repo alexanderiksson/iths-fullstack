@@ -61,12 +61,7 @@ export default function ProfileHead({
 
             <section className="flex flex-col gap-8 mb-8 pb-6 border-b border-neutral-800">
                 <div className="flex items-center gap-8">
-                    <img
-                        src="/profileplaceholder.jpg"
-                        width={100}
-                        className="rounded-full"
-                        alt=""
-                    />
+                    <img src="/profileplaceholder.jpg" width={80} className="rounded-full" alt="" />
                     <div className="flex flex-col gap-4 w-full">
                         <div className="flex justify-between">
                             <h1 className="text-3xl">{username}</h1>

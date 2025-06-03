@@ -4,7 +4,7 @@ import Navigation from "./components/Navigation";
 export default function Layout() {
     return (
         <>
-            <main className="pt-24 pb-12 lg:ml-64 relative">
+            <main className="pt-12 pb-20 lg:ml-64 relative">
                 <Outlet />
             </main>
             <Navigation />
