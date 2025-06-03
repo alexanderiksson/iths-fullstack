@@ -3,6 +3,7 @@ import FollowButton from "./FollowButton";
 import { FollowlistModal } from "./Modals";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileProps {
     userId: number | undefined;
@@ -28,6 +29,8 @@ export default function ProfileHead({
     const [followersIsOpen, setFollowersIsOpen] = useState(false);
     const [followsIsOpen, setFollowsIsOpen] = useState(false);
 
+    const navigate = useNavigate();
+
     const handleLogOut = async () => {
         try {
             await axios.post(
@@ -38,7 +41,7 @@ export default function ProfileHead({
                 }
             );
 
-            window.location.href = "/login";
+            navigate("/login");
         } catch (err) {
             console.error(err);
         }
