@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -22,6 +22,10 @@ app.use("/api/posts", postRoutes);
 
 // Frontend
 app.use(express.static(path.join(__dirname, "../../client/dist")));
+
+app.get(/^\/(?!api).*/, (_req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, "../../client/dist", "index.html"));
+});
 
 // Start server
 app.listen(port, () => {
