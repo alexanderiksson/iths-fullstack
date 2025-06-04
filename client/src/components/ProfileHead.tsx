@@ -68,6 +68,7 @@ export default function ProfileHead({
                     <div className="flex flex-col gap-4 w-full">
                         <div className="flex justify-between">
                             <h1 className="text-3xl">{username}</h1>
+
                             {isCurrentUser && (
                                 <button className="button" onClick={handleLogOut}>
                                     Logga ut
