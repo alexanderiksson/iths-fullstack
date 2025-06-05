@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 import Search from "./pages/Search";
 import NewPost from "./pages/NewPost";
 import User from "./pages/User";
@@ -20,6 +21,7 @@ function App() {
                         <Route path="/new-post" element={<NewPost />} />
                         <Route path="/search" element={<Search />} />
                         <Route path="/profile" element={<Profile />} />
+                        <Route path="/profile/edit" element={<EditProfile />} />
                         <Route path="/u/:id" element={<User />} />
                     </Route>
                 </Route>

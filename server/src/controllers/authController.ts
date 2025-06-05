@@ -89,7 +89,10 @@ export const login = async (req: Request, res: Response) => {
             return;
         }
 
-        const token = jwt.sign({ username, id: user.rows[0].id }, jwtSecret as string);
+        const token = jwt.sign(
+            { username, id: user.rows[0].id, profile_picture: user.rows[0].profile_picture },
+            jwtSecret as string
+        );
 
         res.cookie("token", token, {
             httpOnly: true,

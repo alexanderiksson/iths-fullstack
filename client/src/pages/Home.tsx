@@ -32,7 +32,12 @@ export default function Home() {
                                         key={index}
                                         date={post.created}
                                         text={post.text}
-                                        user={{ id: post.user_id, username: post.username }}
+                                        user={{
+                                            id: post.user_id,
+                                            username: post.username,
+                                            profile_picture:
+                                                post.profile_picture ?? "/profileplaceholder.jpg",
+                                        }}
                                         liked={post.likes?.includes(user.id) ?? false}
                                         postId={post.id}
                                         likesCount={post.likes?.length ?? 0}

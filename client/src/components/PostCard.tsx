@@ -13,6 +13,7 @@ interface PostCardProps {
     user: {
         id: number;
         username: string;
+        profile_picture: string;
     };
     liked: boolean;
     postId: number;
@@ -75,10 +76,19 @@ export default function PostCard({
                             className="text-neutral-300 text-sm flex items-center gap-2"
                         >
                             <img
-                                src="/profileplaceholder.jpg"
+                                src={user.profile_picture}
                                 width={20}
-                                className="rounded-full"
-                                alt=""
+                                height={20}
+                                className="rounded-full object-cover"
+                                style={{
+                                    width: 20,
+                                    height: 20,
+                                    minWidth: 20,
+                                    minHeight: 20,
+                                    maxWidth: 20,
+                                    maxHeight: 20,
+                                }}
+                                alt="Profil bild"
                             />
                             {user.username}
                         </Link>

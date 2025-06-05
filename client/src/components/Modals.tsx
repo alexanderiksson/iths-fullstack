@@ -84,6 +84,7 @@ export function CommentsModal({
                     id: res.data.id,
                     user_id: currentUser.data.id,
                     username: currentUser.data.username,
+                    profile_picture: currentUser.data.profile_picture,
                     comment: comment,
                     created: new Date().toString(),
                 },
@@ -119,6 +120,9 @@ export function CommentsModal({
                                     key={index}
                                     userId={comment.user_id}
                                     username={comment.username}
+                                    profile_picture={
+                                        comment.profile_picture ?? "/profileplaceholder.jpg"
+                                    }
                                     currentUserId={currentUserId}
                                     commentId={comment.id}
                                     comment={comment.comment}
@@ -177,10 +181,19 @@ export function FollowlistModal({ isOpen, onClose, fetchUrl, label }: Followlist
                                 className="text-neutral-300 flex items-center gap-2"
                             >
                                 <img
-                                    src="/profileplaceholder.jpg"
+                                    src={user.profile_picture ?? "/profileplaceholder.jpg"}
                                     width={20}
-                                    className="rounded-full"
-                                    alt=""
+                                    height={20}
+                                    className="rounded-full object-cover"
+                                    style={{
+                                        width: 20,
+                                        height: 20,
+                                        minWidth: 20,
+                                        minHeight: 20,
+                                        maxWidth: 20,
+                                        maxHeight: 20,
+                                    }}
+                                    alt="Profil bild"
                                 />
                                 {user.username}
                             </Link>

@@ -3,11 +3,13 @@ import FollowButton from "./FollowButton";
 import { FollowlistModal } from "./Modals";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { IoIosSettings } from "react-icons/io";
 
 interface ProfileProps {
     userId: number | undefined;
     username: string | undefined;
+    profilePicture: string | undefined;
     followers: number[] | undefined;
     follows: number[] | undefined;
     posts: Post[] | undefined;
@@ -19,6 +21,7 @@ interface ProfileProps {
 export default function ProfileHead({
     userId,
     username,
+    profilePicture,
     followers,
     follows,
     posts,
@@ -64,10 +67,31 @@ export default function ProfileHead({
 
             <section className="flex flex-col gap-8 mb-8 pb-6 border-b border-neutral-800">
                 <div className="flex items-center gap-8">
-                    <img src="/profileplaceholder.jpg" width={80} className="rounded-full" alt="" />
+                    <img
+                        src={profilePicture}
+                        width={80}
+                        height={80}
+                        className="rounded-full object-cover"
+                        style={{
+                            width: 80,
+                            height: 80,
+                            minWidth: 80,
+                            minHeight: 80,
+                            maxWidth: 80,
+                            maxHeight: 80,
+                        }}
+                        alt="Profil bild"
+                    />
                     <div className="flex flex-col gap-4 w-full">
                         <div className="flex justify-between">
-                            <h1 className="text-3xl">{username}</h1>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-3xl">{username}</h1>
+                                {isCurrentUser && (
+                                    <Link to="/profile/edit">
+                                        <IoIosSettings size={24} color="gray" />
+                                    </Link>
+                                )}
+                            </div>
 
                             {isCurrentUser && (
                                 <button className="button" onClick={handleLogOut}>

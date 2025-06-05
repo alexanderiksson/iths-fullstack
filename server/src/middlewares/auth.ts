@@ -6,6 +6,7 @@ declare module "express-serve-static-core" {
         user?: {
             id: number;
             username: string;
+            profile_picture: string;
         };
     }
 }
@@ -38,7 +39,11 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
         const decoded = jwt.verify(token, jwtSecret);
 
         if (typeof decoded === "object" && decoded !== null && isAuthPayload(decoded)) {
-            req.user = { id: decoded.id, username: decoded.username };
+            req.user = {
+                id: decoded.id,
+                username: decoded.username,
+                profile_picture: decoded.profile_picture,
+            };
             next();
             return;
         }

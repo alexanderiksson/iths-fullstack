@@ -22,6 +22,7 @@ export default function Profile() {
             <ProfileHead
                 userId={profile?.id}
                 username={profile?.username}
+                profilePicture={profile?.profile_picture ?? "/profileplaceholder.jpg"}
                 followers={profile?.followers}
                 follows={profile?.follows}
                 posts={profile?.posts}
@@ -43,6 +44,8 @@ export default function Profile() {
                                     user={{
                                         id: profile.id,
                                         username: profile.username,
+                                        profile_picture:
+                                            profile.profile_picture ?? "/profileplaceholder.jpg",
                                     }}
                                     liked={post.likes?.includes(profile.id) ?? false}
                                     postId={post.id}

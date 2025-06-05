@@ -23,7 +23,7 @@ export const getFeed = async (req: Request, res: Response) => {
         }
 
         const posts = await pool.query(
-            `SELECT posts.*, users.username
+            `SELECT posts.*, users.username, users.profile_picture
              FROM posts
              JOIN users ON posts.user_id = users.id
              WHERE posts.user_id = ANY($1::int[])`,
@@ -50,15 +50,21 @@ export const getFeed = async (req: Request, res: Response) => {
         }
 
         const userIds = [...new Set(comments.map((comment) => comment.user_id))];
-        const commentUsernamesMap = new Map<number, string>();
+        const commentUserMap = new Map<
+            number,
+            { username: string; profile_picture: string | null }
+        >();
 
         if (userIds.length > 0) {
             const commentUsernamesResult = await pool.query(
-                "SELECT id, username FROM users WHERE id = ANY($1::int[])",
+                "SELECT id, username, profile_picture FROM users WHERE id = ANY($1::int[])",
                 [userIds]
             );
             commentUsernamesResult.rows.forEach((row) => {
-                commentUsernamesMap.set(row.id, row.username);
+                commentUserMap.set(row.id, {
+                    username: row.username,
+                    profile_picture: row.profile_picture,
+                });
             });
         }
 
@@ -67,13 +73,17 @@ export const getFeed = async (req: Request, res: Response) => {
             likes: likes.filter((like) => like.post_id === post.id).map((like) => like.user_id),
             comments: comments
                 .filter((comment) => comment.post_id === post.id)
-                .map((comment) => ({
-                    id: comment.id,
-                    user_id: comment.user_id,
-                    username: commentUsernamesMap.get(comment.user_id) || null,
-                    comment: comment.comment,
-                    created: comment.created,
-                })),
+                .map((comment) => {
+                    const user = commentUserMap.get(comment.user_id);
+                    return {
+                        id: comment.id,
+                        user_id: comment.user_id,
+                        username: user ? user.username : null,
+                        profile_picture: user ? user.profile_picture : null,
+                        comment: comment.comment,
+                        created: comment.created,
+                    };
+                }),
         }));
 
         res.json(allPosts);

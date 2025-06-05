@@ -50,9 +50,18 @@ export default function Search() {
                                 <Link to={`/u/${user.id}`}>
                                     <li className="py-3 px-2 flex items-center gap-2" key={index}>
                                         <img
-                                            src="/profileplaceholder.jpg"
+                                            src={user.profile_picture ?? "/profileplaceholder.jpg"}
                                             width={32}
-                                            className="rounded-full"
+                                            height={32}
+                                            className="rounded-full object-cover"
+                                            style={{
+                                                width: 32,
+                                                height: 32,
+                                                minWidth: 32,
+                                                minHeight: 32,
+                                                maxWidth: 32,
+                                                maxHeight: 32,
+                                            }}
                                             alt="Profil bild"
                                         />
                                         {user.username}

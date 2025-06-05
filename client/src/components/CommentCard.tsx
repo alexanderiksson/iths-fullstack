@@ -7,6 +7,7 @@ import axios from "axios";
 interface CommentCardProps {
     userId: number;
     username: string;
+    profile_picture: string;
     currentUserId: number;
     commentId: number;
     comment: string;
@@ -16,6 +17,7 @@ interface CommentCardProps {
 export default function CommentCard({
     userId,
     username,
+    profile_picture,
     currentUserId,
     commentId,
     comment,
@@ -49,9 +51,18 @@ export default function CommentCard({
                         className="text-neutral-300 flex items-center gap-2 shrink-0"
                     >
                         <img
-                            src="/profileplaceholder.jpg"
+                            src={profile_picture}
                             width={20}
-                            className="rounded-full"
+                            height={20}
+                            className="rounded-full object-cover"
+                            style={{
+                                width: 20,
+                                height: 20,
+                                minWidth: 20,
+                                minHeight: 20,
+                                maxWidth: 20,
+                                maxHeight: 20,
+                            }}
                             alt=""
                         />
                         {username}
