@@ -30,6 +30,7 @@ interface FollowlistModalProps extends ModalProps {
 
 interface NewpostModalProps extends ModalProps {
     username: string | undefined;
+    profilePicture: string | undefined;
 }
 
 export function DeleteModal({ isOpen, onClose, onDelete }: DeleteModalProps) {
@@ -205,7 +206,7 @@ export function FollowlistModal({ isOpen, onClose, fetchUrl, label }: Followlist
     );
 }
 
-export function NewpostModal({ isOpen, onClose, username }: NewpostModalProps) {
+export function NewpostModal({ isOpen, onClose, username, profilePicture }: NewpostModalProps) {
     const [text, setText] = useState("");
     const [msg, setMsg] = useState<string | null>(null);
     const [msgStyle, setMsgStyle] = useState("");
@@ -258,10 +259,19 @@ export function NewpostModal({ isOpen, onClose, username }: NewpostModalProps) {
 
                 <div className="flex items-start gap-3">
                     <img
-                        src="/profileplaceholder.jpg"
+                        src={profilePicture ?? "/profileplaceholder.jpg"}
                         width={32}
-                        className="rounded-full mt-1"
-                        alt=""
+                        height={32}
+                        className="rounded-full object-cover mt-1"
+                        style={{
+                            width: 32,
+                            height: 32,
+                            minWidth: 32,
+                            minHeight: 32,
+                            maxWidth: 32,
+                            maxHeight: 32,
+                        }}
+                        alt="Profil bild"
                     />
 
                     <div className="w-full">

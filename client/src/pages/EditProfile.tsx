@@ -47,34 +47,58 @@ export default function EditProfile() {
     return (
         <div className="content">
             <h1 className="text-2xl mb-6">Redigera profil</h1>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-12">
                 <div className="flex flex-col gap-2">
                     <label htmlFor="username">Användarnamn</label>
                     <input
                         type="text"
                         name="username"
                         id="username"
-                        className="bg-secondary w-md p-2 border border-white/10 rounded-lg"
+                        className="bg-secondary w-md max-w-full p-2 border border-white/10 rounded-lg"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="picture">Profilbild</label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        name="picture"
-                        id="picture"
-                        onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                                setPicture(e.target.files[0]);
-                            } else {
-                                setPicture(null);
+                <div className="flex flex-col items-start gap-2">
+                    <div className="flex flex-col items-center gap-2">
+                        <img
+                            src={
+                                picture
+                                    ? URL.createObjectURL(picture)
+                                    : user?.profile_picture ?? "/profileplaceholder.jpg"
                             }
-                        }}
-                    />
+                            alt="Profil bild"
+                            width={150}
+                            height={150}
+                            className="rounded-full object-cover"
+                            style={{
+                                width: 150,
+                                height: 150,
+                                minWidth: 150,
+                                minHeight: 150,
+                                maxWidth: 150,
+                                maxHeight: 150,
+                            }}
+                        />
+                        <label htmlFor="picture" className="text-blue-500 cursor-pointer">
+                            Välj profilbild
+                            <input
+                                type="file"
+                                accept="image/*"
+                                name="picture"
+                                id="picture"
+                                style={{ display: "none" }}
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                        setPicture(e.target.files[0]);
+                                    } else {
+                                        setPicture(null);
+                                    }
+                                }}
+                            />
+                        </label>
+                    </div>
                 </div>
 
                 {msg && <span>{msg}</span>}

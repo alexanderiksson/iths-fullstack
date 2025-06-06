@@ -48,6 +48,7 @@ export default function Navigation() {
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
                 username={user?.username}
+                profilePicture={user?.profile_picture}
             />
 
             <div className="w-64 bg-secondary hidden lg:flex flex-col gap-16 fixed h-screen px-4 py-12 border border-white/10">
