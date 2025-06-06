@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
 import type { User } from "../types/User";
+import useFetch from "../hooks/useFetch";
 import PostCard from "../components/PostCard";
 import ProfileHead from "../components/ProfileHead";
 import Loader from "../components/Loader";
@@ -24,7 +24,7 @@ export default function User() {
     if (userLoading || currentUserLoading) return <Loader />;
     if (userError || currentUserError || !user || !currentUser) return <Error />;
 
-    const isFollowing = user.followers?.includes(currentUser!.id) ?? false;
+    const isFollowing = user.followers.includes(currentUser.id) ?? false;
 
     return (
         <div className="content">
@@ -36,8 +36,8 @@ export default function User() {
                 follows={user.follows}
                 posts={user.posts}
                 follow={isFollowing}
-                isCurrentUser={user.id === currentUser!.id}
-                currentUser={currentUser!.id}
+                isCurrentUser={user.id === currentUser.id}
+                currentUser={currentUser.id}
             />
 
             <section>
@@ -58,9 +58,9 @@ export default function User() {
                                         profile_picture:
                                             user.profile_picture ?? "/profileplaceholder.jpg",
                                     }}
-                                    liked={post.likes?.includes(currentUser.id) ?? false}
+                                    liked={post.likes.includes(currentUser.id) ?? false}
                                     postId={post.id}
-                                    likesCount={post.likes?.length ?? 0}
+                                    likesCount={post.likes.length ?? 0}
                                     comments={post.comments}
                                     currentUserId={currentUser.id}
                                 />

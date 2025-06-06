@@ -7,8 +7,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { IoIosSettings } from "react-icons/io";
 
 interface ProfileProps {
-    userId: number | undefined;
-    username: string | undefined;
+    userId: number;
+    username: string;
     profilePicture: string | undefined;
     followers: number[] | undefined;
     follows: number[] | undefined;

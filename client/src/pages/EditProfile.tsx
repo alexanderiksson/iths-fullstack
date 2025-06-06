@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import useFetch from "../hooks/useFetch";
+import axios from "axios";
 import type { User } from "../types/User";
+import useFetch from "../hooks/useFetch";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
-import axios from "axios";
 
 export default function EditProfile() {
     const [username, setUsername] = useState("");

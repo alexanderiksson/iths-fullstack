@@ -6,11 +6,15 @@ import Loader from "../components/Loader";
 import Error from "../components/Error";
 
 export default function Home() {
-    const { data: user } = useFetch<User>("/api/users/me");
-    const { data: feed, loading, error } = useFetch<Post[]>("/api/posts/feed");
+    const { data: user, loading, error } = useFetch<User>("/api/users/me");
+    const {
+        data: feed,
+        loading: feedLoading,
+        error: feedError,
+    } = useFetch<Post[]>("/api/posts/feed");
 
-    if (loading) return <Loader />;
-    if (error || !user) return <Error />;
+    if (loading || feedLoading) return <Loader />;
+    if (error || feedError || !user) return <Error />;
 
     return (
         <div className="content">

@@ -7,6 +7,7 @@ import { FaUser } from "react-icons/fa6";
 import { NewpostModal } from "./Modals";
 import useFetch from "../hooks/useFetch";
 import type { User } from "../types/User";
+import Error from "./Error";
 
 const MobileNav = ({ onOpen }: { onOpen: () => void }) => {
     return (
@@ -42,12 +43,14 @@ export default function Navigation() {
 
     const { data: user } = useFetch<User>("/api/users/me");
 
+    if (!user) return <Error />;
+
     return (
         <>
             <NewpostModal
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
-                username={user?.username}
+                username={user.username}
                 profilePicture={user?.profile_picture}
             />
 

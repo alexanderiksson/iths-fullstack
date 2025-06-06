@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import type { Comment } from "../types/Post";
-import { IoMdClose } from "react-icons/io";
 import useFetch from "../hooks/useFetch";
 import Loader from "./Loader";
 import Error from "./Error";
 import CommentCard from "./CommentCard";
+import { IoMdClose } from "react-icons/io";
 
 interface ModalProps {
     isOpen: boolean;
@@ -29,7 +29,7 @@ interface FollowlistModalProps extends ModalProps {
 }
 
 interface NewpostModalProps extends ModalProps {
-    username: string | undefined;
+    username: string;
     profilePicture: string | undefined;
 }
 

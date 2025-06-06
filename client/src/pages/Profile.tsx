@@ -15,24 +15,24 @@ export default function Profile() {
     } = useFetch<User>(user ? `/api/users/user/${user.id}` : null);
 
     if (loading || profileLoading) return <Loader />;
-    if (error || profileError) return <Error />;
+    if (error || profileError || !profile) return <Error />;
 
     return (
         <div className="content">
             <ProfileHead
-                userId={profile?.id}
-                username={profile?.username}
-                profilePicture={profile?.profile_picture ?? "/profileplaceholder.jpg"}
-                followers={profile?.followers}
-                follows={profile?.follows}
-                posts={profile?.posts}
+                userId={profile.id}
+                username={profile.username}
+                profilePicture={profile.profile_picture ?? "/profileplaceholder.jpg"}
+                followers={profile.followers}
+                follows={profile.follows}
+                posts={profile.posts}
                 isCurrentUser
             />
 
             <section>
                 <h2 className="text-xl mb-4">Inlägg</h2>
                 <div className="flex flex-col gap-4">
-                    {Array.isArray(profile?.posts) && profile.posts.length > 0 ? (
+                    {Array.isArray(profile.posts) && profile.posts.length > 0 ? (
                         profile.posts
                             .slice()
                             .reverse()
@@ -47,9 +47,9 @@ export default function Profile() {
                                         profile_picture:
                                             profile.profile_picture ?? "/profileplaceholder.jpg",
                                     }}
-                                    liked={post.likes?.includes(profile.id) ?? false}
+                                    liked={post.likes.includes(profile.id) ?? false}
                                     postId={post.id}
-                                    likesCount={post.likes?.length ?? 0}
+                                    likesCount={post.likes.length ?? 0}
                                     comments={post.comments}
                                     currentUserId={profile.id}
                                 />
