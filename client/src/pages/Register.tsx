@@ -17,6 +17,12 @@ export default function Register() {
         setLoading(true);
         setError(null);
 
+        if (password.length < 6) {
+            setError("Lösenordet måste innehålla minst 6 tecken");
+            setLoading(false);
+            return;
+        }
+
         try {
             await axios.post(
                 "/api/auth/register",

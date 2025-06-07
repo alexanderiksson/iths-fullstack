@@ -17,6 +17,11 @@ export const register = async (req: Request, res: Response) => {
         return;
     }
 
+    if (password.length < 6) {
+        res.sendStatus(400);
+        return;
+    }
+
     if (!jwtSecret) {
         console.error("JWT_SECRET saknas");
         res.sendStatus(500);
