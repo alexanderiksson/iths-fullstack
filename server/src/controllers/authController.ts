@@ -32,7 +32,7 @@ export const register = async (req: Request, res: Response) => {
         const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
 
         if (user.rows.length > 0) {
-            res.status(409).send("Användarnamnet är upptaget");
+            res.sendStatus(409);
             return;
         }
     } catch (err) {
