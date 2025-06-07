@@ -63,16 +63,14 @@ export default function ProfileHead({
                         }}
                         alt="Profil bild"
                     />
-                    <div className="flex flex-col gap-4 w-full">
-                        <div className="flex justify-between">
-                            <div className="flex items-center gap-2">
-                                <h1 className="text-3xl">{username}</h1>
-                                {isCurrentUser && (
-                                    <Link to="/profile/edit">
-                                        <IoIosSettings size={24} color="gray" />
-                                    </Link>
-                                )}
-                            </div>
+                    <div className="flex flex-col gap-4 w-full overflow-hidden">
+                        <div className="flex items-center gap-2">
+                            <h1 className="text-3xl truncate">{username}</h1>
+                            {isCurrentUser && (
+                                <Link to="/profile/edit" className="shrink-0">
+                                    <IoIosSettings size={24} color="gray" />
+                                </Link>
+                            )}
                         </div>
 
                         <div className="flex gap-4">
