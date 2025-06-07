@@ -13,5 +13,6 @@ router.post("/follow/:id", auth, userController.followUser);
 router.delete("/follow/:id", auth, userController.unfollowUser);
 router.get("/followers/:id", auth, userController.getFollowers);
 router.get("/follows/:id", auth, userController.getFollows);
+router.delete("/delete-account", auth, userController.deleteUser);
 
 export default router;

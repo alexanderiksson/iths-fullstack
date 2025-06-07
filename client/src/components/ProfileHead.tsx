@@ -2,8 +2,7 @@ import type { Post } from "../types/Post";
 import FollowButton from "./FollowButton";
 import { FollowlistModal } from "./Modals";
 import { useState } from "react";
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IoIosSettings } from "react-icons/io";
 
 interface ProfileProps {
@@ -31,24 +30,6 @@ export default function ProfileHead({
 }: ProfileProps) {
     const [followersIsOpen, setFollowersIsOpen] = useState(false);
     const [followsIsOpen, setFollowsIsOpen] = useState(false);
-
-    const navigate = useNavigate();
-
-    const handleLogOut = async () => {
-        try {
-            await axios.post(
-                "/api/auth/logout",
-                {},
-                {
-                    withCredentials: true,
-                }
-            );
-
-            navigate("/login");
-        } catch (err) {
-            console.error(err);
-        }
-    };
 
     return (
         <>
@@ -92,12 +73,6 @@ export default function ProfileHead({
                                     </Link>
                                 )}
                             </div>
-
-                            {isCurrentUser && (
-                                <button className="button" onClick={handleLogOut}>
-                                    Logga ut
-                                </button>
-                            )}
                         </div>
 
                         <div className="flex gap-4">

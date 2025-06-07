@@ -14,7 +14,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
         return;
     }
 
-    res.json({ id: user?.id, username: user?.username, profile_picture: user?.profile_picture });
+    res.json({ id: user.id, username: user.username, profile_picture: user.profile_picture });
 };
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -90,12 +90,12 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 export const getUser = async (req: Request, res: Response) => {
-    const user = req.params.user;
+    const userId = req.params.user;
 
     try {
         const userInfo = await pool.query(
             "SELECT id, username, profile_picture FROM users WHERE id = $1",
-            [user]
+            [userId]
         );
 
         if (userInfo.rows.length === 0) {
@@ -104,12 +104,14 @@ export const getUser = async (req: Request, res: Response) => {
         }
 
         const followers = await pool.query("SELECT * FROM users_follows WHERE follows = $1", [
-            user,
+            userId,
         ]);
 
-        const follows = await pool.query("SELECT * FROM users_follows WHERE user_id = $1", [user]);
+        const follows = await pool.query("SELECT * FROM users_follows WHERE user_id = $1", [
+            userId,
+        ]);
 
-        const posts = await pool.query("SELECT * FROM posts WHERE user_id = $1", [user]);
+        const posts = await pool.query("SELECT * FROM posts WHERE user_id = $1", [userId]);
 
         const postIds = posts.rows.map((post) => post.id);
 
@@ -284,6 +286,30 @@ export const getFollows = async (req: Request, res: Response) => {
             [userId]
         );
         res.json(follows.rows);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+        res.sendStatus(401);
+        return;
+    }
+
+    try {
+        await pool.query("DELETE FROM users WHERE id = $1", [userId]);
+
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== "dev",
+            sameSite: "strict",
+        });
+
+        res.sendStatus(200);
     } catch (err) {
         console.error(err);
         res.sendStatus(500);

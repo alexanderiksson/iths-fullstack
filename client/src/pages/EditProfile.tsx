@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import type { User } from "../types/User";
 import useFetch from "../hooks/useFetch";
@@ -9,6 +10,8 @@ export default function EditProfile() {
     const [username, setUsername] = useState("");
     const [picture, setPicture] = useState<File | null>(null);
     const [msg, setMsg] = useState("");
+
+    const navigate = useNavigate();
 
     const { data: user, loading, error } = useFetch<User>("/api/users/me");
 
@@ -41,20 +44,51 @@ export default function EditProfile() {
         }
     };
 
+    const handleLogOut = async () => {
+        try {
+            await axios.post(
+                "/api/auth/logout",
+                {},
+                {
+                    withCredentials: true,
+                }
+            );
+
+            navigate("/login");
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (confirm("Är du säker?")) {
+            try {
+                await axios.delete("/api/users/delete-account", {
+                    withCredentials: true,
+                });
+
+                navigate("/login");
+            } catch (err) {
+                console.error(err);
+                alert("Något gick fel");
+            }
+        }
+    };
+
     if (loading) return <Loader />;
     if (error) return <Error />;
 
     return (
         <div className="content">
             <h1 className="text-2xl mb-6">Redigera profil</h1>
-            <div className="flex flex-col gap-12">
+            <section className="flex flex-col gap-12 bg-secondary p-6 rounded-lg border border-white/5 mb-8">
                 <div className="flex flex-col gap-2">
                     <label htmlFor="username">Användarnamn</label>
                     <input
                         type="text"
                         name="username"
                         id="username"
-                        className="bg-secondary w-md max-w-full p-2 border border-white/10 rounded-lg"
+                        className="bg-background w-md max-w-full p-2 border border-white/10 rounded-lg"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
@@ -104,9 +138,21 @@ export default function EditProfile() {
                 {msg && <span>{msg}</span>}
 
                 <button className="button" onClick={handleSave}>
-                    Spara
+                    Spara ändringar
                 </button>
-            </div>
+            </section>
+
+            <section className="bg-secondary p-6 rounded-lg border border-white/5">
+                <div className="flex gap-4">
+                    <button className="button" onClick={handleLogOut}>
+                        Logga ut
+                    </button>
+
+                    <button className="button-danger" onClick={handleDelete}>
+                        Radera konto
+                    </button>
+                </div>
+            </section>
         </div>
     );
 }
