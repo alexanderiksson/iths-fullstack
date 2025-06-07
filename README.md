@@ -1,6 +1,6 @@
 # ITHS Fullstack labb 3, socialt nätverk
 
-Detta är en sociala media app byggd so del av slutprojektet i kursen fullstackutveckling. Den erbjuder funktioner som användarautentisering, skapa inlägg, följa användare, gilla och kommentera inlägg samt profilhantering.
+Detta är en sociala media app byggd som del av slutprojektet i kursen fullstackutveckling. Den erbjuder funktioner som användarautentisering, skapa inlägg, följa användare, gilla och kommentera inlägg samt profilhantering.
 
 ## Funktioner
 
@@ -38,7 +38,7 @@ Detta är en sociala media app byggd so del av slutprojektet i kursen fullstacku
 -   Tailwind
 -   Axios
 
-### Backend (Server)
+### Backend
 
 -   Node.js med Express
 -   TypeScript
